@@ -1,0 +1,382 @@
+/* ---------------------------------------------------------------------------
+   Accordion
+
+   Structure:  .acc > .acc-item > .acc-header > .acc-trigger
+                                > .acc-panel  > .acc-content
+
+   Styling hooks:
+     data-variant   solid | outline | soft | elevated | minimal   (on .acc)
+     data-size      sm | md | lg                                  (on .acc)
+     data-panel-open                                              (Base UI, trigger)
+     data-open / data-disabled / data-index                       (Base UI, item)
+     data-starting-style / data-ending-style                      (Base UI, panel)
+
+   Base UI CSS variables consumed here:
+     --accordion-panel-height
+   --------------------------------------------------------------------------- */
+
+.acc {
+  --acc-radius: var(--step-radius);
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 30rem;
+  color: var(--text);
+  font-size: var(--step-text);
+  line-height: var(--step-lead);
+}
+
+.acc[data-full] {
+  max-width: none;
+}
+
+/* --- Item ----------------------------------------------------------------- */
+
+.acc-item {
+  position: relative;
+  background-color: var(--surface);
+}
+
+.acc-header {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* --- Trigger -------------------------------------------------------------- */
+
+.acc-trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--step-gap);
+  padding: var(--step-pad-y) var(--step-pad-x);
+  margin: 0;
+  border: 0;
+  border-radius: inherit;
+  background-color: transparent;
+  font: inherit;
+  font-weight: 520;
+  text-align: start;
+  color: var(--text);
+  user-select: none;
+  cursor: default;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .acc-trigger:hover:not([data-disabled]) {
+    background-color: var(--surface-hover);
+  }
+}
+
+.acc-trigger:active:not([data-disabled]) {
+  background-color: var(--surface-active);
+}
+
+.acc-trigger:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+.acc-trigger[data-disabled] {
+  color: var(--text-subtle);
+  cursor: not-allowed;
+}
+
+.acc-trigger[data-panel-open] {
+  color: var(--text);
+}
+
+/* Secondary text inside a trigger (counts, badges, meta). */
+.acc-trigger-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.acc-trigger-meta {
+  font-size: var(--step-text-sm);
+  font-weight: 400;
+  color: var(--text-subtle);
+}
+
+.acc-trigger-side {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-shrink: 0;
+}
+
+/* --- Indicator icons ------------------------------------------------------ */
+
+.acc-icon {
+  flex-shrink: 0;
+  width: var(--step-icon);
+  height: var(--step-icon);
+  color: var(--text-subtle);
+  transition:
+    rotate var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.acc-trigger[data-panel-open] .acc-icon {
+  color: var(--accent-text);
+}
+
+/* A plus that becomes an x. */
+.acc-trigger[data-panel-open] .acc-icon[data-indicator='plus'] {
+  rotate: 45deg;
+}
+
+/* A caret that flips to point up. */
+.acc-trigger[data-panel-open] .acc-icon[data-indicator='caret'] {
+  rotate: 180deg;
+}
+
+/* A chevron that rotates a quarter turn. */
+.acc-icon[data-indicator='chevron'] {
+  rotate: -90deg;
+}
+
+.acc-trigger[data-panel-open] .acc-icon[data-indicator='chevron'] {
+  rotate: 0deg;
+}
+
+/* Leading indicator sits before the label instead of after it. */
+.acc-trigger[data-indicator-side='start'] {
+  justify-content: flex-start;
+}
+
+/* --- Panel ---------------------------------------------------------------- */
+
+.acc-panel {
+  height: var(--accordion-panel-height);
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--step-text);
+  transition: height var(--dur-med) var(--ease-out);
+}
+
+.acc-panel[data-starting-style],
+.acc-panel[data-ending-style] {
+  height: 0;
+}
+
+/* Padding lives on an inner element so it does not interfere with the height
+   animation measured by Base UI on the panel itself. */
+.acc-content {
+  padding: 0 var(--step-pad-x) var(--step-pad-y);
+}
+
+.acc-content > p + p {
+  margin-block-start: 0.625rem;
+}
+
+/* =============================== Variants ================================= */
+
+/* --- solid: filled card, hairline divider between items ------------------- */
+
+.acc[data-variant='solid'] {
+  border: var(--hairline) solid var(--border);
+  border-radius: var(--acc-radius);
+  background-color: var(--surface);
+  overflow: hidden;
+}
+
+.acc[data-variant='solid'] .acc-item + .acc-item {
+  border-block-start: var(--hairline) solid var(--border);
+}
+
+/* --- outline: every item is its own outlined block ------------------------ */
+
+.acc[data-variant='outline'] {
+  gap: 0.5rem;
+  background-color: transparent;
+}
+
+.acc[data-variant='outline'] .acc-item {
+  border: var(--hairline) solid var(--border);
+  border-radius: var(--acc-radius);
+  background-color: transparent;
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.acc[data-variant='outline'] .acc-item[data-open] {
+  border-color: var(--border-strong);
+}
+
+/* --- soft: tinted surfaces, no borders ------------------------------------ */
+
+.acc[data-variant='soft'] {
+  gap: 0.375rem;
+  background-color: transparent;
+}
+
+.acc[data-variant='soft'] .acc-item {
+  border-radius: var(--acc-radius);
+  background-color: var(--surface-sunken);
+  overflow: hidden;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.acc[data-variant='soft'] .acc-item[data-open] {
+  background-color: var(--accent-soft);
+}
+
+.acc[data-variant='soft'] .acc-item[data-open] .acc-trigger {
+  color: var(--accent-text);
+}
+
+@media (hover: hover) {
+  .acc[data-variant='soft'] .acc-trigger:hover:not([data-disabled]) {
+    background-color: color-mix(in oklch, var(--text) 5%, transparent);
+  }
+}
+
+/* --- elevated: floating cards --------------------------------------------- */
+
+.acc[data-variant='elevated'] {
+  gap: 0.625rem;
+  background-color: transparent;
+}
+
+.acc[data-variant='elevated'] .acc-item {
+  border-radius: var(--acc-radius);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow var(--dur-med) var(--ease-out);
+}
+
+.acc[data-variant='elevated'] .acc-item[data-open] {
+  box-shadow: var(--shadow-md);
+}
+
+/* --- minimal: rules only, no chrome --------------------------------------- */
+
+.acc[data-variant='minimal'] {
+  background-color: transparent;
+}
+
+.acc[data-variant='minimal'] .acc-item {
+  background-color: transparent;
+  border-block-end: var(--hairline) solid var(--border);
+}
+
+.acc[data-variant='minimal'] .acc-trigger {
+  padding-inline: 0;
+}
+
+.acc[data-variant='minimal'] .acc-content {
+  padding-inline: 0;
+}
+
+@media (hover: hover) {
+  .acc[data-variant='minimal'] .acc-trigger:hover:not([data-disabled]) {
+    background-color: transparent;
+    color: var(--accent-text);
+  }
+}
+
+.acc[data-variant='minimal'] .acc-trigger:focus-visible {
+  outline-offset: 2px;
+}
+
+/* ============================ Rich panel content ========================== */
+
+.acc-list {
+  margin: 0;
+  padding-inline-start: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.acc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-start: 0.875rem;
+}
+
+.acc-action {
+  padding: 0.3125rem 0.6875rem;
+  border: var(--hairline) solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface);
+  font-size: var(--step-text-sm);
+  color: var(--text);
+  cursor: default;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.acc-action[data-tone='accent'] {
+  border-color: transparent;
+  background-color: var(--accent);
+  color: var(--accent-on);
+}
+
+@media (hover: hover) {
+  .acc-action:hover {
+    border-color: var(--border-strong);
+  }
+
+  .acc-action[data-tone='accent']:hover {
+    background-color: var(--accent-hover);
+    border-color: transparent;
+  }
+}
+
+.acc-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.0625rem 0.4375rem;
+  border-radius: 999px;
+  background-color: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.acc-badge[data-tone='neutral'] {
+  background-color: var(--surface-active);
+  color: var(--text-muted);
+}
+
+.acc-kv {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: 0.375rem 1rem;
+  font-size: var(--step-text-sm);
+}
+
+.acc-kv dt {
+  color: var(--text-subtle);
+}
+
+.acc-kv dd {
+  margin: 0;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.acc-avatar {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background-color: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 0.6875rem;
+  font-weight: 650;
+  flex-shrink: 0;
+}

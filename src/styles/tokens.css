@@ -1,0 +1,183 @@
+/* ---------------------------------------------------------------------------
+   Design tokens.
+
+   Themes and sizes are declared as *scoped* selectors rather than on :root
+   only, so any subtree can opt into a different theme or size:
+
+     <div data-theme="dark" data-size="sm"> ... </div>
+
+   That is what makes the side-by-side theme and size comparisons on each
+   showcase page possible.
+   --------------------------------------------------------------------------- */
+
+/* --- Theme: light (default) ---------------------------------------------- */
+:root,
+[data-theme='light'] {
+  --bg: oklch(99% 0.002 265deg);
+  --bg-subtle: oklch(97.2% 0.003 265deg);
+  --surface: oklch(100% 0 0deg);
+  --surface-hover: oklch(96.5% 0.004 265deg);
+  --surface-active: oklch(93.5% 0.006 265deg);
+  --surface-sunken: oklch(97.8% 0.003 265deg);
+
+  --border: oklch(91% 0.005 265deg);
+  --border-strong: oklch(83% 0.008 265deg);
+
+  --text: oklch(21% 0.012 265deg);
+  --text-muted: oklch(50% 0.012 265deg);
+  --text-subtle: oklch(64% 0.01 265deg);
+
+  --accent: oklch(51% 0.19 275deg);
+  --accent-hover: oklch(46% 0.19 275deg);
+  --accent-on: oklch(100% 0 0deg);
+  --accent-soft: oklch(95.5% 0.025 275deg);
+  --accent-soft-hover: oklch(92.5% 0.04 275deg);
+  --accent-border: oklch(80% 0.08 275deg);
+  --accent-text: oklch(44% 0.18 275deg);
+
+  --ring: oklch(51% 0.19 275deg);
+
+  --shadow-sm: 0 1px 2px oklch(21% 0.012 265deg / 8%);
+  --shadow-md:
+    0 1px 2px oklch(21% 0.012 265deg / 6%), 0 4px 12px oklch(21% 0.012 265deg / 8%);
+  --shadow-lg:
+    0 2px 4px oklch(21% 0.012 265deg / 5%), 0 12px 32px oklch(21% 0.012 265deg / 11%);
+
+  color-scheme: light;
+}
+
+/* --- Theme: dark ---------------------------------------------------------- */
+[data-theme='dark'] {
+  --bg: oklch(17.5% 0.012 265deg);
+  --bg-subtle: oklch(20.5% 0.014 265deg);
+  --surface: oklch(22.5% 0.015 265deg);
+  --surface-hover: oklch(26.5% 0.017 265deg);
+  --surface-active: oklch(30.5% 0.019 265deg);
+  --surface-sunken: oklch(19.5% 0.013 265deg);
+
+  --border: oklch(31% 0.016 265deg);
+  --border-strong: oklch(41% 0.02 265deg);
+
+  --text: oklch(96% 0.004 265deg);
+  --text-muted: oklch(72% 0.012 265deg);
+  --text-subtle: oklch(58% 0.014 265deg);
+
+  --accent: oklch(66% 0.17 275deg);
+  --accent-hover: oklch(72% 0.16 275deg);
+  --accent-on: oklch(17.5% 0.012 265deg);
+  --accent-soft: oklch(28% 0.055 275deg);
+  --accent-soft-hover: oklch(33% 0.07 275deg);
+  --accent-border: oklch(44% 0.11 275deg);
+  --accent-text: oklch(80% 0.11 275deg);
+
+  --ring: oklch(72% 0.16 275deg);
+
+  --shadow-sm: 0 1px 2px oklch(0% 0 0deg / 40%);
+  --shadow-md: 0 1px 2px oklch(0% 0 0deg / 35%), 0 4px 12px oklch(0% 0 0deg / 45%);
+  --shadow-lg: 0 2px 4px oklch(0% 0 0deg / 35%), 0 12px 32px oklch(0% 0 0deg / 55%);
+
+  color-scheme: dark;
+}
+
+/* --- Theme: contrast ------------------------------------------------------ */
+[data-theme='contrast'] {
+  --bg: oklch(100% 0 0deg);
+  --bg-subtle: oklch(100% 0 0deg);
+  --surface: oklch(100% 0 0deg);
+  --surface-hover: oklch(94% 0 0deg);
+  --surface-active: oklch(88% 0 0deg);
+  --surface-sunken: oklch(97% 0 0deg);
+
+  --border: oklch(0% 0 0deg);
+  --border-strong: oklch(0% 0 0deg);
+
+  --text: oklch(0% 0 0deg);
+  --text-muted: oklch(28% 0 0deg);
+  --text-subtle: oklch(38% 0 0deg);
+
+  --accent: oklch(0% 0 0deg);
+  --accent-hover: oklch(20% 0 0deg);
+  --accent-on: oklch(100% 0 0deg);
+  --accent-soft: oklch(92% 0 0deg);
+  --accent-soft-hover: oklch(86% 0 0deg);
+  --accent-border: oklch(0% 0 0deg);
+  --accent-text: oklch(0% 0 0deg);
+
+  --ring: oklch(0% 0 0deg);
+
+  --shadow-sm: 2px 2px 0 oklch(0% 0 0deg);
+  --shadow-md: 3px 3px 0 oklch(0% 0 0deg);
+  --shadow-lg: 5px 5px 0 oklch(0% 0 0deg);
+
+  color-scheme: light;
+}
+
+/* Contrast theme squares every corner and thickens every hairline. */
+[data-theme='contrast'] {
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --hairline: 2px;
+}
+
+/* --- Shape & motion (theme independent) ----------------------------------- */
+:root {
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --hairline: 1px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 120ms;
+  --dur-med: 180ms;
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+/* --- Sizes ---------------------------------------------------------------- */
+:root,
+[data-size='md'] {
+  --step-text: 0.875rem;
+  --step-text-sm: 0.8125rem;
+  --step-lead: 1.35;
+  --step-pad-x: 0.875rem;
+  --step-pad-y: 0.6875rem;
+  --step-gap: 0.75rem;
+  --step-icon: 16px;
+  --step-radius: var(--radius-md);
+}
+
+[data-size='sm'] {
+  --step-text: 0.8125rem;
+  --step-text-sm: 0.75rem;
+  --step-lead: 1.3;
+  --step-pad-x: 0.6875rem;
+  --step-pad-y: 0.5rem;
+  --step-gap: 0.5rem;
+  --step-icon: 14px;
+  --step-radius: var(--radius-sm);
+}
+
+[data-size='lg'] {
+  --step-text: 1rem;
+  --step-text-sm: 0.875rem;
+  --step-lead: 1.45;
+  --step-pad-x: 1.125rem;
+  --step-pad-y: 0.9375rem;
+  --step-gap: 1rem;
+  --step-icon: 20px;
+  --step-radius: var(--radius-lg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
