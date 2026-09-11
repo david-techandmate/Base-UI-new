@@ -105,6 +105,21 @@ Pages are assembled from the primitives in `src/showcase/ui.tsx`: `PageHeader`, 
 Sections run simple to complex down the page — plain variants first, then alternative functional
 setups, then full compositions.
 
+## Deployment
+
+Deployed on Vercel from `main`. Every push to `main` publishes to production; every pull request
+gets its own preview URL.
+
+`vercel.json` carries two things:
+
+- **A SPA rewrite.** Routes like `/c/accordion` are React Router paths, not files. Without the
+  rewrite, opening or refreshing one returns 404. Static files are matched before rewrites, so this
+  only catches unmatched paths.
+- **Immutable caching for `/assets/*`.** Vite emits content-hashed filenames, so those are safe to
+  cache forever.
+
+Build settings are auto-detected (`npm run build` → `dist`).
+
 ## Checking the API
 
 Base UI ships TypeScript definitions, and they are the authoritative source when the docs are
