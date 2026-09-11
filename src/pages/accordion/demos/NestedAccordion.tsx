@@ -32,10 +32,10 @@ export function NestedAccordion() {
           <Accordion.Header className="acc-header">
             <Accordion.Trigger className="acc-trigger">
               {section.title}
-              <ChevronIcon className="acc-icon" data-indicator="chevron" />
+              <ChevronIcon className="ui-icon" data-indicator="chevron" />
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel className="acc-panel">
+          <Accordion.Panel className="ui-panel acc-panel">
             <div className="acc-content">
               <Accordion.Root className="acc" data-variant="minimal" data-full multiple>
                 {section.children.map((child) => (
@@ -43,10 +43,10 @@ export function NestedAccordion() {
                     <Accordion.Header className="acc-header">
                       <Accordion.Trigger className="acc-trigger">
                         {child.title}
-                        <CaretIcon className="acc-icon" data-indicator="caret" />
+                        <CaretIcon className="ui-icon" data-indicator="caret" />
                       </Accordion.Trigger>
                     </Accordion.Header>
-                    <Accordion.Panel className="acc-panel">
+                    <Accordion.Panel className="ui-panel acc-panel">
                       <div className="acc-content">{child.body}</div>
                     </Accordion.Panel>
                   </Accordion.Item>

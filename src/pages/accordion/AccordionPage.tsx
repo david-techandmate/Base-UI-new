@@ -40,10 +40,10 @@ function variantSnippet(variant: string) {
     <Accordion.Header className="acc-header">
       <Accordion.Trigger className="acc-trigger">
         Question
-        <PlusIcon className="acc-icon" data-indicator="plus" />
+        <PlusIcon className="ui-icon" data-indicator="plus" />
       </Accordion.Trigger>
     </Accordion.Header>
-    <Accordion.Panel className="acc-panel">
+    <Accordion.Panel className="ui-panel acc-panel">
       <div className="acc-content">Answer</div>
     </Accordion.Panel>
   </Accordion.Item>

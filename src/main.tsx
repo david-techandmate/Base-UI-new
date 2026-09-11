@@ -4,10 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { PrefsProvider } from './showcase/prefs';
 
-import './styles/reset.css';
-import './styles/tokens.css';
-import './styles/shell.css';
-import './styles/components/accordion.css';
+// The design system: reset, tokens, primitives, and every component.
+import './styles/index.css';
+// Showroom chrome only — delete this when using the repo as a starting point.
+import './showcase/showroom.css';
 
 const container = document.getElementById('root');
 if (!container) {

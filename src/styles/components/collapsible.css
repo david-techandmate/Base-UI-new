@@ -1,22 +1,25 @@
 /* ---------------------------------------------------------------------------
-   Accordion
+   Collapsible
 
-   Structure:  .acc > .acc-item > .acc-header > .acc-trigger
-                                > .acc-panel  > .acc-content
+   Structure:  .col > .col-trigger
+                    > .col-panel > .col-content
 
    Styling hooks:
-     data-variant   solid | outline | soft | elevated | minimal   (on .acc)
+     data-variant   solid | outline | soft | elevated | minimal   (on .col)
      data-size      sm | md | lg                                  (inherited)
      data-panel-open                                              (Base UI, trigger)
-     data-open / data-disabled / data-index                       (Base UI, item)
+     data-open / data-closed                                      (Base UI, root & panel)
      data-starting-style / data-ending-style                      (Base UI, panel)
+
+   Unlike Accordion, hiddenUntilFound is a Panel-only prop and the open state
+   is a boolean rather than an array of item values.
 
    Shared behaviour (panel animation, indicator rotation, actions, badges)
    comes from base/primitives.css.
    --------------------------------------------------------------------------- */
 
-.acc {
-  --acc-radius: var(--step-radius);
+.col {
+  --col-radius: var(--step-radius);
 
   display: flex;
   flex-direction: column;
@@ -27,26 +30,13 @@
   line-height: var(--step-lead);
 }
 
-.acc[data-full] {
+.col[data-full] {
   max-width: none;
-}
-
-/* --- Item ----------------------------------------------------------------- */
-
-.acc-item {
-  position: relative;
-  background-color: var(--surface);
-}
-
-.acc-header {
-  margin: 0;
-  font-size: inherit;
-  font-weight: inherit;
 }
 
 /* --- Trigger -------------------------------------------------------------- */
 
-.acc-trigger {
+.col-trigger {
   display: flex;
   width: 100%;
   align-items: center;
@@ -67,176 +57,139 @@
 }
 
 @media (hover: hover) {
-  .acc-trigger:hover:not([data-disabled]) {
+  .col-trigger:hover:not([data-disabled]) {
     background-color: var(--surface-hover);
   }
 }
 
-.acc-trigger:active:not([data-disabled]) {
+.col-trigger:active:not([data-disabled]) {
   background-color: var(--surface-active);
 }
 
-.acc-trigger:focus-visible {
+.col-trigger:focus-visible {
   position: relative;
   z-index: 1;
   outline: 2px solid var(--ring);
   outline-offset: -2px;
 }
 
-.acc-trigger[data-disabled] {
+.col-trigger[data-disabled] {
   color: var(--text-subtle);
   cursor: not-allowed;
 }
 
-/* Secondary text inside a trigger (counts, badges, meta). */
-.acc-trigger-main {
+.col-trigger-main {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
   min-width: 0;
 }
 
-.acc-trigger-meta {
+.col-trigger-meta {
   font-size: var(--step-text-sm);
   font-weight: 400;
   color: var(--text-subtle);
 }
 
-.acc-trigger-side {
+.col-trigger-side {
   display: flex;
   align-items: center;
   gap: 0.625rem;
   flex-shrink: 0;
 }
 
-/* Leading indicator sits before the label instead of after it. */
-.acc-trigger[data-indicator-side='start'] {
+.col-trigger[data-indicator-side='start'] {
   justify-content: flex-start;
 }
 
 /* --- Panel ---------------------------------------------------------------- */
 
 /* Pair with .ui-panel, which supplies the height transition. */
-.acc-panel {
-  height: var(--accordion-panel-height);
+.col-panel {
+  height: var(--collapsible-panel-height);
   color: var(--text-muted);
   font-size: var(--step-text);
 }
 
-/* Padding lives on an inner element so it does not interfere with the height
-   animation measured by Base UI on the panel itself. */
-.acc-content {
+.col-content {
   padding: 0 var(--step-pad-x) var(--step-pad-y);
 }
 
-.acc-content > p + p {
+.col-content > p + p {
   margin-block-start: 0.625rem;
 }
 
 /* =============================== Variants ================================= */
 
-/* --- solid: filled card, hairline divider between items ------------------- */
-
-.acc[data-variant='solid'] {
+.col[data-variant='solid'] {
   border: var(--hairline) solid var(--border);
-  border-radius: var(--acc-radius);
+  border-radius: var(--col-radius);
   background-color: var(--surface);
   overflow: hidden;
 }
 
-.acc[data-variant='solid'] .acc-item + .acc-item {
-  border-block-start: var(--hairline) solid var(--border);
-}
-
-/* --- outline: every item is its own outlined block ------------------------ */
-
-.acc[data-variant='outline'] {
-  gap: 0.5rem;
-  background-color: transparent;
-}
-
-.acc[data-variant='outline'] .acc-item {
+.col[data-variant='outline'] {
   border: var(--hairline) solid var(--border);
-  border-radius: var(--acc-radius);
+  border-radius: var(--col-radius);
   background-color: transparent;
   overflow: hidden;
   transition: border-color var(--dur-fast) var(--ease-out);
 }
 
-.acc[data-variant='outline'] .acc-item[data-open] {
+.col[data-variant='outline'][data-open] {
   border-color: var(--border-strong);
 }
 
-/* --- soft: tinted surfaces, no borders ------------------------------------ */
-
-.acc[data-variant='soft'] {
-  gap: 0.375rem;
-  background-color: transparent;
-}
-
-.acc[data-variant='soft'] .acc-item {
-  border-radius: var(--acc-radius);
+.col[data-variant='soft'] {
+  border-radius: var(--col-radius);
   background-color: var(--surface-sunken);
   overflow: hidden;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
 
-.acc[data-variant='soft'] .acc-item[data-open] {
+.col[data-variant='soft'][data-open] {
   background-color: var(--accent-soft);
 }
 
-.acc[data-variant='soft'] .acc-item[data-open] .acc-trigger {
+.col[data-variant='soft'][data-open] .col-trigger {
   color: var(--accent-text);
 }
 
 @media (hover: hover) {
-  .acc[data-variant='soft'] .acc-trigger:hover:not([data-disabled]) {
+  .col[data-variant='soft'] .col-trigger:hover:not([data-disabled]) {
     background-color: color-mix(in oklch, var(--text) 5%, transparent);
   }
 }
 
-/* --- elevated: floating cards --------------------------------------------- */
-
-.acc[data-variant='elevated'] {
-  gap: 0.625rem;
-  background-color: transparent;
-}
-
-.acc[data-variant='elevated'] .acc-item {
-  border-radius: var(--acc-radius);
+.col[data-variant='elevated'] {
+  border-radius: var(--col-radius);
   background-color: var(--surface);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: box-shadow var(--dur-med) var(--ease-out);
 }
 
-.acc[data-variant='elevated'] .acc-item[data-open] {
+.col[data-variant='elevated'][data-open] {
   box-shadow: var(--shadow-md);
 }
 
-/* --- minimal: rules only, no chrome --------------------------------------- */
-
-.acc[data-variant='minimal'] {
-  background-color: transparent;
-}
-
-.acc[data-variant='minimal'] .acc-item {
+.col[data-variant='minimal'] {
   background-color: transparent;
   border-block-end: var(--hairline) solid var(--border);
 }
 
-.acc[data-variant='minimal'] .acc-trigger,
-.acc[data-variant='minimal'] .acc-content {
+.col[data-variant='minimal'] .col-trigger,
+.col[data-variant='minimal'] .col-content {
   padding-inline: 0;
 }
 
 @media (hover: hover) {
-  .acc[data-variant='minimal'] .acc-trigger:hover:not([data-disabled]) {
+  .col[data-variant='minimal'] .col-trigger:hover:not([data-disabled]) {
     background-color: transparent;
     color: var(--accent-text);
   }
 }
 
-.acc[data-variant='minimal'] .acc-trigger:focus-visible {
+.col[data-variant='minimal'] .col-trigger:focus-visible {
   outline-offset: 2px;
 }

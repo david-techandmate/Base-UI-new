@@ -43,7 +43,7 @@ export const GROUPS: ComponentGroup[] = [
         'A set of collapsible panels with headings.',
         'ready',
       ),
-      entry('collapsible', 'Collapsible', 'A panel controlled by a button.'),
+      entry('collapsible', 'Collapsible', 'A panel controlled by a button.', 'ready'),
       entry('tabs', 'Tabs', 'Toggles between related panels on the same page.'),
     ],
   },

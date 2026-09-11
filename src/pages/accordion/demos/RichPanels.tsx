@@ -58,7 +58,7 @@ export function RichPanels() {
           <Accordion.Header className="acc-header">
             <Accordion.Trigger className="acc-trigger">
               <span className="acc-trigger-side">
-                <span className="acc-avatar" aria-hidden="true">
+                <span className="ui-avatar" aria-hidden="true">
                   {env.initials}
                 </span>
                 <span className="acc-trigger-main">
@@ -69,16 +69,16 @@ export function RichPanels() {
                 </span>
               </span>
               <span className="acc-trigger-side">
-                <span className="acc-badge" data-tone={env.instances ? undefined : 'neutral'}>
+                <span className="ui-badge" data-tone={env.instances ? undefined : 'neutral'}>
                   {env.instances} live
                 </span>
-                <ChevronIcon className="acc-icon" data-indicator="chevron" />
+                <ChevronIcon className="ui-icon" data-indicator="chevron" />
               </span>
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel className="acc-panel">
+          <Accordion.Panel className="ui-panel acc-panel">
             <div className="acc-content">
-              <dl className="acc-kv">
+              <dl className="ui-kv">
                 <dt>Status</dt>
                 <dd>{env.status}</dd>
                 <dt>Region</dt>
@@ -88,14 +88,14 @@ export function RichPanels() {
                 <dt>Image</dt>
                 <dd>{env.image}</dd>
               </dl>
-              <div className="acc-actions">
-                <button type="button" className="acc-action" data-tone="accent">
+              <div className="ui-actions">
+                <button type="button" className="ui-action" data-tone="accent">
                   Redeploy
                 </button>
-                <button type="button" className="acc-action">
+                <button type="button" className="ui-action">
                   View logs
                 </button>
-                <button type="button" className="acc-action">
+                <button type="button" className="ui-action">
                   Roll back
                 </button>
               </div>
