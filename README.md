@@ -44,8 +44,12 @@ subtree can opt into a different theme or scale:
 <div data-theme="dark" data-size="sm">…</div>
 ```
 
-That's what lets one page section show all three themes, or all three size scales, side by side.
-Set them on `<html>` for the whole app.
+Set them on `<html>` and the whole app retokenises — that is what the switches in the showroom
+header do. Scope them to a subtree only when you deliberately want an island on a different theme.
+
+**Order matters.** `[data-theme='x']` and `:root` have identical specificity, so on `<html>`
+whichever is declared last wins. Every theme block must come after the `:root` defaults, or a theme
+that overrides a default is silently dropped when set on `<html>`.
 
 - **Themes:** `light`, `dark`, `contrast`
 - **Sizes:** `sm`, `md`, `lg`
@@ -100,7 +104,7 @@ Anything two components would both need lives in `base/primitives.css` rather th
 4. Flip the entry's `status` to `'ready'` in `src/registry.ts`.
 
 Pages are assembled from the primitives in `src/showcase/ui.tsx`: `PageHeader`, `Section`,
-`DemoGrid`, `Demo`, `SizeMatrix`, `ThemeMatrix`, `SourceBlock`, `Callout`.
+`DemoGrid`, `Demo`, `TokenReadout`, `SourceBlock`, `Callout`.
 
 Sections run simple to complex down the page — plain variants first, then alternative functional
 setups, then full compositions.

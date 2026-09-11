@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CheckIcon, CaretIcon, CopyIcon } from './icons';
-import { THEMES, SIZES, type Theme, type Size } from './prefs';
+import { usePrefs } from './prefs';
 
 /* --- Copy to clipboard ---------------------------------------------------- */
 
@@ -159,36 +159,66 @@ export function Demo(props: {
   );
 }
 
-/* --- Matrices ------------------------------------------------------------- */
+/* --- Live token readout --------------------------------------------------- */
+
+const READOUT_TOKENS = [
+  '--step-text',
+  '--step-pad-x',
+  '--step-icon',
+  '--radius-sm',
+  '--hairline',
+  '--bg',
+  '--surface',
+  '--text',
+  '--accent',
+] as const;
 
 /**
- * Renders the same demo once per theme, each inside its own `data-theme`
- * scope, so all three themes can be compared without toggling the whole app.
+ * Reads the tokens the toolbar is currently resolving to, straight off
+ * <html>. This is the honest version of a token table: it reports what the
+ * cascade actually produced, so a token that silently fails to apply shows up
+ * here rather than being taken on trust.
  */
-export function ThemeMatrix({ children }: { children: (theme: Theme) => React.ReactNode }) {
-  return (
-    <div className="demo-grid" data-columns={3}>
-      {THEMES.map((theme) => (
-        <div key={theme} className="theme-pane" data-theme={theme}>
-          <div className="theme-pane-bar">data-theme=&quot;{theme}&quot;</div>
-          <div className="theme-pane-stage">{children(theme)}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
+export function TokenReadout() {
+  const { theme, size } = usePrefs();
+  const [values, setValues] = React.useState<Record<string, string>>({});
 
-/** Renders the same demo once per size scale, each in its own `data-size` scope. */
-export function SizeMatrix({ children }: { children: (size: Size) => React.ReactNode }) {
+  React.useEffect(() => {
+    // PrefsProvider writes data-theme/data-size in its own effect, and parent
+    // effects run after child effects — so reading synchronously here would
+    // report the previous selection. A frame later the attributes are settled.
+    const frame = requestAnimationFrame(() => {
+      const computed = getComputedStyle(document.documentElement);
+      const next: Record<string, string> = {};
+      for (const token of READOUT_TOKENS) {
+        next[token] = computed.getPropertyValue(token).trim();
+      }
+      setValues(next);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [theme, size]);
+
   return (
-    <div className="demo-grid" data-columns={3}>
-      {SIZES.map((size) => (
-        <Demo key={size} label={`data-size="${size}"`}>
-          <div data-size={size} style={{ width: '100%' }}>
-            {children(size)}
+    <div className="readout">
+      <div className="readout-bar">
+        resolved on &lt;html data-theme=&quot;{theme}&quot; data-size=&quot;{size}&quot;&gt;
+      </div>
+      <dl className="readout-grid">
+        {READOUT_TOKENS.map((token) => (
+          <div className="readout-row" key={token}>
+            <dt>{token}</dt>
+            <dd>
+              {token.startsWith('--bg') ||
+              token.startsWith('--surface') ||
+              token.startsWith('--text') ||
+              token.startsWith('--accent') ? (
+                <span className="readout-swatch" style={{ background: `var(${token})` }} />
+              ) : null}
+              {values[token] || '—'}
+            </dd>
           </div>
-        </Demo>
-      ))}
+        ))}
+      </dl>
     </div>
   );
 }

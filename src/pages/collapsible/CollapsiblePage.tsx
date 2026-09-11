@@ -1,4 +1,4 @@
-import { Callout, Demo, DemoGrid, PageHeader, Section, SizeMatrix, ThemeMatrix } from '../../showcase/ui';
+import { Callout, Demo, DemoGrid, PageHeader, Section, TokenReadout } from '../../showcase/ui';
 import { BasicCollapsible } from './demos/BasicCollapsible';
 import { Indicators } from './demos/Indicators';
 import { ControlledCollapsible } from './demos/ControlledCollapsible';
@@ -17,8 +17,7 @@ const VARIANTS = ['solid', 'outline', 'soft', 'elevated', 'minimal'] as const;
 
 const TOC = [
   { id: 'variants', title: 'Variants' },
-  { id: 'sizes', title: 'Size scale' },
-  { id: 'themes', title: 'Themes' },
+  { id: 'tokens', title: 'Size and theme' },
   { id: 'states', title: 'States' },
   { id: 'indicators', title: 'Indicators' },
   { id: 'controlled', title: 'Controlled' },
@@ -76,26 +75,25 @@ export function CollapsiblePage() {
       </Section>
 
       <Section
-        id="sizes"
+        id="tokens"
         index={2}
-        title="Size scale"
-        description="Identical --step-* tokens to Accordion, so a Collapsible and an Accordion at the same size line up."
+        title="Size and theme"
+        description="Identical --step-* and theme tokens to Accordion, so the two line up at any setting. Drive it from the size and theme switches in the header; the readout shows what actually resolved on <html>."
       >
-        <SizeMatrix>{() => <BasicCollapsible variant="solid" />}</SizeMatrix>
-      </Section>
-
-      <Section
-        id="themes"
-        index={3}
-        title="Themes side by side"
-        description="Each pane sets its own data-theme scope, independent of the toolbar."
-      >
-        <ThemeMatrix>{() => <BasicCollapsible variant="solid" />}</ThemeMatrix>
+        <DemoGrid columns={2}>
+          <Demo label="follows the header" align="stretch">
+            <BasicCollapsible variant="solid" />
+          </Demo>
+          <Demo label="follows the header" align="stretch">
+            <BasicCollapsible variant="soft" />
+          </Demo>
+        </DemoGrid>
+        <TokenReadout />
       </Section>
 
       <Section
         id="states"
-        index={4}
+        index={3}
         title="Default and disabled states"
         description="defaultOpen takes a boolean here, not an array. disabled blocks interaction and exposes [data-disabled] on the trigger."
         source={statesSource}
@@ -115,7 +113,7 @@ export function CollapsiblePage() {
 
       <Section
         id="indicators"
-        index={5}
+        index={4}
         title="Trigger indicators"
         description="Shared with Accordion via .ui-icon — rotation keys off [data-panel-open] on the trigger, so no React state is involved."
         source={indicatorSource}
@@ -142,7 +140,7 @@ export function CollapsiblePage() {
 
       <Section
         id="controlled"
-        index={6}
+        index={5}
         title="Controlled"
         description="open / onOpenChange with a boolean. The eventDetails second argument carries the reason and the DOM event, and supports cancel() exactly as Accordion does."
         source={controlledSource}
@@ -156,7 +154,7 @@ export function CollapsiblePage() {
 
       <Section
         id="rich"
-        index={7}
+        index={6}
         title="Rich content"
         description="The trigger is a button and the panel is a div, so both take arbitrary layout. This is the shape most 'advanced options' disclosures end up wanting."
         source={richSource}
@@ -170,7 +168,7 @@ export function CollapsiblePage() {
 
       <Section
         id="mounting"
-        index={8}
+        index={7}
         title="Panel mounting"
         description={`Three modes, all Panel props on Collapsible. Open devtools with each panel closed to see the difference: removed from the DOM, present but hidden, or present with hidden="until-found".`}
         source={mountingSource}
