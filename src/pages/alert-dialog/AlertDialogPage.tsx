@@ -174,7 +174,7 @@ export function AlertDialogPage() {
         id="nested"
         index={7}
         title="Nested"
-        description="Put a Root inside another Root's popup and Base UI handles the rest: data-nested on the inner popup, data-nested-dialog-open on the outer one, and a --nested-dialogs count on every popup in the stack. The count is what drives the offset and scale here, so depth is CSS rather than React state."
+        description="Put a Root inside another Root's popup and Base UI handles the rest: data-nested on the inner popup, data-nested-dialog-open on the outer one, and a --nested-dialogs count on every popup in the stack. The count drives the offset and scale here, so depth is CSS rather than React state."
         source={nestedSource}
       >
         <DemoGrid columns={1}>
@@ -182,6 +182,13 @@ export function AlertDialogPage() {
             <NestedAlertDialog />
           </Demo>
         </DemoGrid>
+        <Callout>
+          What Base UI does not do is treat the stack as one flow. Each Root owns its own open
+          state, so an <code>AlertDialog.Close</code> in the inner popup closes only the inner
+          dialog and drops the user back onto the question they just answered. For a confirmation
+          chain, control the outer dialog and close it from the inner confirm — as here, where
+          Back steps down one level and Close account ends both.
+        </Callout>
       </Section>
 
       <Section
