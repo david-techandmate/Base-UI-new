@@ -58,6 +58,13 @@
   --accent-border: oklch(80% 0.08 275deg);
   --accent-text: oklch(44% 0.18 275deg);
 
+  --danger: oklch(52% 0.2 27deg);
+  --danger-hover: oklch(46% 0.2 27deg);
+  --danger-on: oklch(100% 0 0deg);
+  --danger-soft: oklch(95.5% 0.025 27deg);
+  --danger-border: oklch(80% 0.09 27deg);
+  --danger-text: oklch(45% 0.19 27deg);
+
   --ring: oklch(51% 0.19 275deg);
 
   --shadow-sm: 0 1px 2px oklch(21% 0.012 265deg / 8%);
@@ -93,6 +100,13 @@
   --accent-border: oklch(44% 0.11 275deg);
   --accent-text: oklch(80% 0.11 275deg);
 
+  --danger: oklch(58% 0.19 27deg);
+  --danger-hover: oklch(64% 0.18 27deg);
+  --danger-on: oklch(100% 0 0deg);
+  --danger-soft: oklch(29% 0.07 27deg);
+  --danger-border: oklch(45% 0.13 27deg);
+  --danger-text: oklch(79% 0.13 27deg);
+
   --ring: oklch(72% 0.16 275deg);
 
   --shadow-sm: 0 1px 2px oklch(0% 0 0deg / 40%);
@@ -125,6 +139,16 @@
   --accent-soft-hover: oklch(86% 0 0deg);
   --accent-border: oklch(0% 0 0deg);
   --accent-text: oklch(0% 0 0deg);
+
+  /* Contrast keeps a red hue for danger rather than collapsing to black: the
+     meaning would otherwise be carried by wording alone. It is darkened so it
+     still clears a high contrast ratio against white. */
+  --danger: oklch(38% 0.22 27deg);
+  --danger-hover: oklch(30% 0.2 27deg);
+  --danger-on: oklch(100% 0 0deg);
+  --danger-soft: oklch(93% 0.035 27deg);
+  --danger-border: oklch(38% 0.22 27deg);
+  --danger-text: oklch(38% 0.22 27deg);
 
   --ring: oklch(0% 0 0deg);
 

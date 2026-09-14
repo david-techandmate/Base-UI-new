@@ -85,8 +85,8 @@ Global CSS classes driven by data attributes, so demo markup is copy-pasteable a
 
 Anything two components would both need belongs in `base/primitives.css` rather than being
 duplicated — the panel height transition, indicator rotation, action buttons, badges, avatars.
-Only Accordion is built so far, so that layer currently has a single consumer; it exists so the
-second component reuses rather than copies.
+Accordion and Alert Dialog both draw on it: `.ui-action` is the same button in an accordion panel
+and in a dialog's action row, which is exactly what that layer is for.
 
 ## Layout
 
