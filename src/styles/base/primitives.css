@@ -6,11 +6,12 @@
    stylesheets stay responsible for whatever is genuinely their own.
    --------------------------------------------------------------------------- */
 
-/* --- Collapsible panel ----------------------------------------------------
+/* --- Collapsing panel -----------------------------------------------------
    Base UI measures a panel and exposes its natural height as a CSS variable
-   whose name is component-specific (--accordion-panel-height,
-   --collapsible-panel-height, and so on). The animation is identical, so it
-   lives here and each component only supplies the height.
+   whose name is component-specific (--accordion-panel-height for Accordion,
+   and a matching name for every other collapsing component). The animation is
+   the same in each case, so it lives here and the component supplies only the
+   height.
 
      <Accordion.Panel className="ui-panel acc-panel" />
    --------------------------------------------------------------------------- */

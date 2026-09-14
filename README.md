@@ -62,25 +62,31 @@ and type-scale values. Components reference tokens exclusively and never hard-co
 Global CSS classes driven by data attributes, so demo markup is copy-pasteable as-is:
 
 ```jsx
-<Collapsible.Root className="col" data-variant="outline">
-  <Collapsible.Trigger className="col-trigger">
-    Trigger
-    <ChevronIcon className="ui-icon" data-indicator="chevron" />
-  </Collapsible.Trigger>
-  <Collapsible.Panel className="ui-panel col-panel">
-    <div className="col-content">Panel</div>
-  </Collapsible.Panel>
-</Collapsible.Root>
+<Accordion.Root className="acc" data-variant="outline">
+  <Accordion.Item className="acc-item" value="item-1">
+    <Accordion.Header className="acc-header">
+      <Accordion.Trigger className="acc-trigger">
+        Question
+        <PlusIcon className="ui-icon" data-indicator="plus" />
+      </Accordion.Trigger>
+    </Accordion.Header>
+    <Accordion.Panel className="ui-panel acc-panel">
+      <div className="acc-content">Answer</div>
+    </Accordion.Panel>
+  </Accordion.Item>
+</Accordion.Root>
 ```
 
 - **Variant and size** are attributes on the root: `data-variant`, `data-size`.
 - **Interactive state** comes from Base UI's own attributes — `[data-panel-open]`, `[data-open]`,
   `[data-disabled]`, `[data-starting-style]`, `[data-ending-style]`. No React state drives styling.
 - **`ui-` prefixed classes** are shared primitives from `base/primitives.css`; component-prefixed
-  classes (`acc-`, `col-`) are specific to that component.
+  classes (`acc-`, and so on) are specific to that component.
 
-Anything two components would both need lives in `base/primitives.css` rather than being duplicated
-— the panel height transition, indicator rotation, action buttons, badges, avatars.
+Anything two components would both need belongs in `base/primitives.css` rather than being
+duplicated — the panel height transition, indicator rotation, action buttons, badges, avatars.
+Only Accordion is built so far, so that layer currently has a single consumer; it exists so the
+second component reuses rather than copies.
 
 ## Layout
 
