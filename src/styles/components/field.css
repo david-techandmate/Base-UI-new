@@ -1,0 +1,247 @@
+/* ---------------------------------------------------------------------------
+   Field, Fieldset and Form
+
+   Structure:  Form (renders <form>)
+                 > Fieldset.Root (renders <fieldset>)
+                     > Fieldset.Legend
+                     > Field.Root (renders <div>)
+                         > Field.Label     (renders <label>)
+                         > Field.Control   (renders <input>)
+                         > Field.Description (renders <p>)
+                         > Field.Error     (renders <div>)
+                         > Field.Item      (renders <div>, for grouped controls)
+                         > Field.Validity  (renders nothing; a render function)
+
+   Styling hooks — every one of these appears on Root AND on Label, Control,
+   Description, Error and Item, so any part can respond to field state without
+   a descendant selector:
+
+     data-disabled   the field ignores interaction
+     data-valid      validated and passing
+     data-invalid    validated and failing
+     data-dirty      the value differs from its initial value
+     data-touched    the control has been focused and blurred
+     data-filled     the control has a value
+     data-focused    the control has focus
+
+   Error additionally gets data-starting-style / data-ending-style, so it can
+   animate in rather than snapping the layout.
+
+   Note: data-valid is only present once the field has actually been
+   validated — before that it is neither valid nor invalid. Styling "valid" as
+   a positive state therefore means nothing until the user has submitted or
+   blurred, depending on validationMode.
+   --------------------------------------------------------------------------- */
+
+/* --- Field ----------------------------------------------------------------- */
+
+.fld {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  width: 100%;
+  max-width: 20rem;
+}
+
+.fld-label {
+  font-size: var(--step-text-sm);
+  font-weight: 550;
+  line-height: var(--step-lead);
+  color: var(--text);
+}
+
+.fld-label[data-disabled] {
+  color: var(--text-subtle);
+}
+
+/* The control is .ui-input plus whatever this field needs on top. */
+.fld-control {
+  width: 100%;
+}
+
+/* Invalid is marked on the border and the ring rather than by colour alone —
+   the message below carries the meaning, this only draws the eye to it. */
+.fld-control[data-invalid] {
+  border-color: var(--danger-border);
+}
+
+.fld-control[data-invalid]:focus-visible {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--danger) 22%, transparent);
+}
+
+.fld-description {
+  margin: 0;
+  font-size: var(--step-text-sm);
+  line-height: var(--step-lead);
+  color: var(--text-muted);
+}
+
+.fld-description[data-disabled] {
+  color: var(--text-subtle);
+}
+
+/* --- Error ------------------------------------------------------------------
+   Base UI mounts Error only while the matching validity failure holds, and
+   gives it the transition hooks on the way in and out.
+   --------------------------------------------------------------------------- */
+
+.fld-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.375rem;
+  font-size: var(--step-text-sm);
+  line-height: var(--step-lead);
+  color: var(--danger-text);
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    translate var(--dur-fast) var(--ease-out);
+}
+
+.fld-error[data-starting-style],
+.fld-error[data-ending-style] {
+  opacity: 0;
+  translate: 0 -0.25rem;
+}
+
+.fld-error-icon {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  margin-block-start: 0.15em;
+}
+
+/* Several messages at once, from a validate() returning an array. */
+.fld-error-list {
+  margin: 0;
+  padding-inline-start: 1.1em;
+  list-style: disc;
+}
+
+/* --- Item -------------------------------------------------------------------
+   Field.Item groups one control in a checkbox or radio group with its own
+   label and description, so each row carries the field state independently.
+   --------------------------------------------------------------------------- */
+
+.fld-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.25rem 0.625rem;
+}
+
+.fld-item .fld-label {
+  font-weight: 450;
+}
+
+.fld-item .fld-description {
+  grid-column: 2;
+}
+
+/* --- Fieldset ---------------------------------------------------------------
+   Fieldset.Root renders a real <fieldset>, which carries default border,
+   margin and padding worth clearing. Legend renders a <div> rather than a
+   <legend>, which is exactly why it can be styled freely.
+   --------------------------------------------------------------------------- */
+
+.fset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--step-gap);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fset-legend {
+  padding-block-end: 0.5rem;
+  border-block-end: var(--hairline) solid var(--border);
+  font-size: var(--step-text);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.fset[data-disabled] .fset-legend {
+  color: var(--text-subtle);
+}
+
+/* --- Form ------------------------------------------------------------------- */
+
+.frm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--step-gap);
+  width: 100%;
+  max-width: 20rem;
+}
+
+.frm-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.frm-actions .ui-action[data-disabled],
+.frm-actions .ui-action:disabled {
+  color: var(--text-subtle);
+  border-color: var(--border);
+}
+
+/* A banner for a message that belongs to the form rather than one field. */
+.frm-note {
+  padding: 0.5rem 0.75rem;
+  border: var(--hairline) solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-sunken);
+  font-size: var(--step-text-sm);
+  color: var(--text-muted);
+}
+
+.frm-note[data-tone='danger'] {
+  border-color: var(--danger-border);
+  background-color: var(--danger-soft);
+  color: var(--danger-text);
+}
+
+.frm-note[data-tone='success'] {
+  border-color: var(--accent-border);
+  background-color: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+/* --- State readout ----------------------------------------------------------
+   Showroom scaffolding rather than part of the design system: it prints the
+   data attributes Base UI actually put on the root, so the states below are
+   observed rather than described.
+   --------------------------------------------------------------------------- */
+
+.fld-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-block-start: 0.125rem;
+}
+
+.fld-flag {
+  padding: 0.125rem 0.4375rem;
+  border: var(--hairline) solid var(--border);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--text-subtle);
+}
+
+.fld-flag[data-on] {
+  border-color: var(--accent-border);
+  background-color: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.fld-flag[data-on][data-flag='invalid'] {
+  border-color: var(--danger-border);
+  background-color: var(--danger-soft);
+  color: var(--danger-text);
+}
