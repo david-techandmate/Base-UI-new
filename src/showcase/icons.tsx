@@ -48,3 +48,4 @@ export const SearchIcon = icon(
     <path d="m10.75 10.75 2.5 2.5" />
   </React.Fragment>,
 );
+export const CrossIcon = icon(<path d="m4 4 8 8M12 4l-8 8" />);

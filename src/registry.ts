@@ -82,7 +82,7 @@ export const GROUPS: ComponentGroup[] = [
   {
     label: 'Selection',
     items: [
-      entry('autocomplete', 'Autocomplete', 'An input with a list of filtered options.'),
+      entry('autocomplete', 'Autocomplete', 'An input with a list of filtered options.', 'ready'),
       entry('checkbox', 'Checkbox', 'A two-state or indeterminate control.'),
       entry('checkbox-group', 'Checkbox Group', 'Shared state for a series of checkboxes.'),
       entry('combobox', 'Combobox', 'An input combined with predefined items.'),

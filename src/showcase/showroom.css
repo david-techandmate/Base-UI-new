@@ -340,6 +340,16 @@
   padding: 1rem;
 }
 
+/* Components that open a popup need room beneath the trigger, or collision
+   avoidance flips the popup upward over the prose explaining it. */
+.demo-stage[data-reserve] {
+  min-height: 22rem;
+}
+
+.demo-stage[data-reserve='tall'] {
+  min-height: 28rem;
+}
+
 /* --- Copy button ---------------------------------------------------------- */
 
 .copy-button {
