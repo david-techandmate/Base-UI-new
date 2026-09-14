@@ -85,6 +85,18 @@
   color: var(--accent-on);
 }
 
+.ui-action[data-tone='danger'] {
+  border-color: transparent;
+  background-color: var(--danger);
+  color: var(--danger-on);
+}
+
+/* A destructive action that should not dominate the row. */
+.ui-action[data-tone='danger-quiet'] {
+  border-color: var(--danger-border);
+  color: var(--danger-text);
+}
+
 @media (hover: hover) {
   .ui-action:hover {
     border-color: var(--border-strong);
@@ -93,6 +105,16 @@
   .ui-action[data-tone='accent']:hover {
     background-color: var(--accent-hover);
     border-color: transparent;
+  }
+
+  .ui-action[data-tone='danger']:hover {
+    background-color: var(--danger-hover);
+    border-color: transparent;
+  }
+
+  .ui-action[data-tone='danger-quiet']:hover {
+    border-color: var(--danger);
+    background-color: var(--danger-soft);
   }
 }
 

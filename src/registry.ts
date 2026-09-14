@@ -50,7 +50,7 @@ export const GROUPS: ComponentGroup[] = [
   {
     label: 'Overlays',
     items: [
-      entry('alert-dialog', 'Alert Dialog', 'Requires a user response to proceed.'),
+      entry('alert-dialog', 'Alert Dialog', 'Requires a user response to proceed.', 'ready'),
       entry('dialog', 'Dialog', 'Opens on top of the entire page.'),
       entry('drawer', 'Drawer', 'A panel with swipe-to-dismiss gestures.'),
       entry('popover', 'Popover', 'An accessible popup anchored to a button.'),

@@ -1,0 +1,217 @@
+/* ---------------------------------------------------------------------------
+   Alert Dialog
+
+   Structure:  Root (renders no element)
+                 > .adlg-backdrop
+                 > .adlg-viewport            (optional, for scrollable content)
+                     > .adlg-popup
+                         > .adlg-header > .adlg-title
+                                        > .adlg-description
+                         > .adlg-actions
+
+   Styling hooks:
+     data-tone      neutral | danger                        (on .adlg-popup)
+     data-size      sm | md | lg                            (inherited)
+     data-open / data-closed                                (Base UI)
+     data-starting-style / data-ending-style                (Base UI)
+     data-nested                                            (Base UI, nested popup)
+     data-nested-dialog-open                                (Base UI, parent popup)
+
+   Base UI CSS variables consumed here:
+     --nested-dialogs   how many dialogs are nested within this one
+
+   Alert Dialog reuses Dialog's Backdrop, Popup, Portal, Title, Description,
+   Close and Viewport parts; only Root, Trigger and the handle are its own.
+   --------------------------------------------------------------------------- */
+
+/* --- Backdrop -------------------------------------------------------------- */
+
+.adlg-backdrop {
+  position: fixed;
+  inset: 0;
+  min-height: 100dvh;
+  background-color: oklch(0% 0 0deg);
+  opacity: 0.2;
+  transition: opacity var(--dur-med) var(--ease-out);
+
+  /* iOS 26+ Safari lets content sit under the browser chrome, so a fixed
+     backdrop stops short of the visual viewport once the page is scrolled.
+     Absolute positioning covers it, which is why the reset gives <body>
+     position: relative. */
+  @supports (-webkit-touch-callout: none) {
+    position: absolute;
+  }
+}
+
+[data-theme='dark'] .adlg-backdrop,
+:root[data-theme='dark'] .adlg-backdrop {
+  opacity: 0.55;
+}
+
+.adlg-backdrop[data-starting-style],
+.adlg-backdrop[data-ending-style] {
+  opacity: 0;
+}
+
+/* --- Viewport --------------------------------------------------------------
+   Only needed when the contents may exceed the screen. Without it the popup
+   positions itself; with it, the viewport scrolls and the popup sits inside.
+   --------------------------------------------------------------------------- */
+
+.adlg-viewport {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* --- Popup ----------------------------------------------------------------- */
+
+.adlg-popup {
+  box-sizing: border-box;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--step-gap);
+  width: 24rem;
+  max-width: calc(100vw - 3rem);
+  padding: var(--step-pad-x);
+  border: var(--hairline) solid var(--border);
+  border-radius: var(--step-radius);
+  background-color: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--step-text);
+  line-height: var(--step-lead);
+  outline: none;
+
+  /* Each dialog with something open on top of it lifts and shrinks, so its top
+     edge peeks out above the child instead of hiding completely behind it.
+     --nested-dialogs counts the dialogs stacked on this one. */
+  translate: -50% calc(-50% - 2.25rem * var(--nested-dialogs));
+  scale: calc(1 - 0.06 * var(--nested-dialogs));
+  transition:
+    translate var(--dur-med) var(--ease-out),
+    scale var(--dur-med) var(--ease-out),
+    opacity var(--dur-med) var(--ease-out);
+}
+
+.adlg-popup[data-starting-style],
+.adlg-popup[data-ending-style] {
+  opacity: 0;
+  translate: -50% calc(-50% + 0.5rem - 2.25rem * var(--nested-dialogs));
+  scale: 0.96;
+}
+
+/* Dim a dialog that has another one open on top of it. A black scrim is nearly
+   invisible over a dark surface, so the dark theme needs a heavier one to read
+   as the same amount of recession. */
+.adlg-popup::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: oklch(0% 0 0deg / 8%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+
+[data-theme='dark'] .adlg-popup::after,
+:root[data-theme='dark'] .adlg-popup::after {
+  background-color: oklch(0% 0 0deg / 40%);
+}
+
+.adlg-popup[data-nested-dialog-open]::after {
+  opacity: 1;
+}
+
+/* Inside a viewport the popup is laid out by the grid, not by itself. */
+.adlg-viewport .adlg-popup {
+  position: static;
+  translate: none;
+  scale: 1;
+}
+
+.adlg-viewport .adlg-popup[data-starting-style],
+.adlg-viewport .adlg-popup[data-ending-style] {
+  translate: none;
+  scale: 0.96;
+}
+
+/* --- Content --------------------------------------------------------------- */
+
+.adlg-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.adlg-title {
+  margin: 0;
+  font-size: calc(var(--step-text) * 1.15);
+  line-height: 1.35;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.adlg-description {
+  margin: 0;
+  font-size: var(--step-text);
+  color: var(--text-muted);
+}
+
+.adlg-body {
+  font-size: var(--step-text);
+  color: var(--text-muted);
+}
+
+.adlg-body > p + p {
+  margin-block-start: 0.625rem;
+}
+
+.adlg-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-start: 0.25rem;
+}
+
+/* --- Tones ----------------------------------------------------------------- */
+
+/* A destructive confirmation marks itself on the title and the top edge, so
+   the intent survives being read without colour. */
+.adlg-popup[data-tone='danger'] {
+  border-color: var(--danger-border);
+}
+
+.adlg-popup[data-tone='danger'] .adlg-title {
+  color: var(--danger-text);
+}
+
+/* --- Trigger ---------------------------------------------------------------
+   The trigger is a plain button; it reuses .ui-action from the primitives so a
+   dialog trigger and a dialog action button match.
+   --------------------------------------------------------------------------- */
+
+.adlg-trigger[data-popup-open] {
+  border-color: var(--border-strong);
+}
+
+/* --- Scrollable sample content --------------------------------------------- */
+
+.adlg-scroll-sample {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  font-size: var(--step-text);
+  color: var(--text-muted);
+}
