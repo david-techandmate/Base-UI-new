@@ -12,6 +12,18 @@ import { MinusIcon, PlusIcon, ScrubIcon } from '../../../showcase/icons';
  * switches the axis; `teleportDistance` wraps the pointer back to the centre
  * so a long drag never runs out of screen.
  *
+ * `allowWheelScrub` is on here. It defaults to off — a page scrolling under the
+ * pointer would otherwise change values by accident — but a scrub area is the
+ * one place where that is not a surprise: the wheel is the same gesture as the
+ * drag, just a different device. Leaving it off here meant the wheel was dead
+ * on precisely the demos where a reader reaches for it.
+ *
+ * Measured, because the two gestures do not share a target: the drag works from
+ * the ScrubArea (the label), while the wheel only works with the input focused
+ * AND the pointer over the input itself. Wheeling over the label scrolls the
+ * page instead. Worth knowing before wiring a tooltip that says "scroll to
+ * adjust" onto the label.
+ *
  * One gap worth knowing: ScrubArea does not expose its `direction` as a data
  * attribute, so `[data-direction='vertical']` matches nothing and a vertical
  * scrub would keep the horizontal cursor. Pass the prop through as a data
@@ -52,7 +64,7 @@ export function ScrubNumberField({
 
   return (
     <Field.Root className="fld">
-      <NumberField.Root ref={rootRef} defaultValue={50}>
+      <NumberField.Root ref={rootRef} defaultValue={50} allowWheelScrub>
         <Field.Label className="fld-label">
           {/* ScrubArea does not expose its direction as a data attribute, so the
               cursor has to be driven from the prop. Passing it through as one
