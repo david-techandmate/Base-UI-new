@@ -201,20 +201,34 @@ export function NumberFieldPage() {
         id="scrub"
         index={6}
         title="Scrub area"
-        description="ScrubArea turns a region into a drag handle for the value. Wrapping the label is the usual choice — it is already next to the field and already means 'this number'. Press and drag any of these."
+        description="ScrubArea turns a region into a drag handle for the value. Wrapping the label is the usual choice — it is already next to the field and already means 'this number'. Press and drag the label on any of these, or focus the input and wheel over the input itself: allowWheelScrub is on here, because the wheel is the same gesture as the drag."
         source={scrubSource}
       >
         <DemoGrid columns={3}>
           <Demo label="horizontal (default)" align="start">
-            <ScrubNumberField hint="Drag the label sideways." />
+            <ScrubNumberField hint="Drag the label sideways, or focus the input and wheel over it." />
           </Demo>
           <Demo label='direction="vertical"' align="start">
-            <ScrubNumberField direction="vertical" hint="Drag the label up and down." />
+            <ScrubNumberField direction="vertical" hint="Drag the label up and down; down decreases." />
           </Demo>
           <Demo label="pixelSensitivity={10}" align="start">
-            <ScrubNumberField pixelSensitivity={10} hint="Five times less sensitive." />
+            <ScrubNumberField pixelSensitivity={10} hint="Five times less sensitive to the drag." />
           </Demo>
         </DemoGrid>
+        <Callout>
+          <code>allowWheelScrub</code> is enabled on all three. It defaults to <em>off</em>, and
+          the States section below shows why — a page scrolling under the pointer would otherwise
+          change values by accident. A scrub area is the one place that is not a surprise: the
+          wheel is the same gesture as the drag, just a different device. Leaving it off here meant
+          the wheel was dead on precisely the demos where a reader reaches for it.
+        </Callout>
+        <Callout>
+          The two gestures do not share a target, which is worth knowing before you put a “scroll
+          to adjust” hint on the label. Measured in Chromium: the <strong>drag</strong> works from
+          the ScrubArea — the label. The <strong>wheel</strong> only works with the input focused{' '}
+          <em>and</em> the pointer over the input itself; wheeling over the label scrolls the page.
+          And when it does apply, the page does not scroll — the field takes the event.
+        </Callout>
         <Callout>
           <code>ScrubArea</code> does <em>not</em> expose its <code>direction</code> as a data
           attribute, so a <code>[data-direction=&apos;vertical&apos;]</code> rule matches nothing
