@@ -143,6 +143,8 @@ export function Demo(props: {
   copy?: string;
   align?: 'start' | 'stretch';
   pad?: 'default' | 'tight';
+  /** Reserve height below the demo so a popup can open downward. */
+  reserve?: true | 'tall';
   children: React.ReactNode;
 }) {
   return (
@@ -152,7 +154,12 @@ export function Demo(props: {
         {props.copy && <CopyButton text={props.copy} />}
       </div>
       {props.note && <p className="demo-note">{props.note}</p>}
-      <div className="demo-stage" data-align={props.align} data-pad={props.pad}>
+      <div
+        className="demo-stage"
+        data-align={props.align}
+        data-pad={props.pad}
+        data-reserve={props.reserve === true ? '' : props.reserve}
+      >
         {props.children}
       </div>
     </figure>
