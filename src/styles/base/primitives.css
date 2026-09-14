@@ -85,6 +85,18 @@
   color: var(--accent-on);
 }
 
+.ui-action[data-tone='danger'] {
+  border-color: transparent;
+  background-color: var(--danger);
+  color: var(--danger-on);
+}
+
+/* A destructive action that should not dominate the row. */
+.ui-action[data-tone='danger-quiet'] {
+  border-color: var(--danger-border);
+  color: var(--danger-text);
+}
+
 @media (hover: hover) {
   .ui-action:hover {
     border-color: var(--border-strong);
@@ -93,6 +105,16 @@
   .ui-action[data-tone='accent']:hover {
     background-color: var(--accent-hover);
     border-color: transparent;
+  }
+
+  .ui-action[data-tone='danger']:hover {
+    background-color: var(--danger-hover);
+    border-color: transparent;
+  }
+
+  .ui-action[data-tone='danger-quiet']:hover {
+    border-color: var(--danger);
+    background-color: var(--danger-soft);
   }
 }
 
@@ -167,9 +189,10 @@
 }
 
 /* --- Text input and label ---------------------------------------------------
-   The first text input in the system arrives with Autocomplete, but Combobox,
-   Select, Input, Number Field and Field will all want the same box — so it
-   lives here rather than in one component's stylesheet.
+   Field, Input, Autocomplete, Combobox, Select and Number Field all want the
+   same box, so it lives here rather than in any one component's stylesheet.
+   Component stylesheets add width and layout on top; none of them restate the
+   border, focus ring or placeholder.
    --------------------------------------------------------------------------- */
 
 .ui-field {
@@ -230,4 +253,56 @@
 
 .ui-input[data-readonly] {
   background-color: var(--surface-sunken);
+}
+
+/* --- Spinner ----------------------------------------------------------------
+   An indeterminate wait. Sized in em so it matches whatever text it sits
+   beside — an async field validating, an autocomplete searching, a button
+   mid-submit.
+   --------------------------------------------------------------------------- */
+
+.ui-spinner {
+  display: inline-block;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 0.85em;
+  height: 0.85em;
+  border: 1.5px solid currentcolor;
+  border-right-color: transparent;
+  border-radius: 999px;
+  vertical-align: -0.05em;
+  animation: ui-spin 0.75s linear infinite;
+}
+
+@keyframes ui-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-spinner {
+    animation-duration: 2.5s;
+  }
+}
+
+/* --- Visually hidden ---------------------------------------------------------
+   Present to assistive technology, absent from the page. For live regions that
+   narrate something the sighted user already sees, and for text that gives a
+   control a name it does not need to display.
+
+   Not `display: none` and not `visibility: hidden` — both remove it from the
+   accessibility tree as well, which defeats the point.
+   --------------------------------------------------------------------------- */
+
+.ui-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }

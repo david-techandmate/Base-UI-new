@@ -49,3 +49,11 @@ export const SearchIcon = icon(
   </React.Fragment>,
 );
 export const CrossIcon = icon(<path d="m4 4 8 8M12 4l-8 8" />);
+export const MinusIcon = icon(<path d="M2.75 8h10.5" />);
+export const ScrubIcon = icon(
+  <React.Fragment>
+    <path d="M6 4.5 2.75 8 6 11.5" />
+    <path d="M10 4.5 13.25 8 10 11.5" />
+    <path d="M4 8h8" />
+  </React.Fragment>,
+);
