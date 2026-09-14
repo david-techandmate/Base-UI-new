@@ -1,0 +1,172 @@
+/* ---------------------------------------------------------------------------
+   OTP Field
+
+   Structure:  Field.Root                 (labelling and validation)
+                 > Field.Label
+                 > OTPField.Root          (renders a <div>)
+                     > .otp-input         (one per slot)
+                     > .otp-separator     (optional, between groups)
+                 > Field.Description
+
+   OTP Field carries Field's seven state attributes plus four of its own, all
+   present on Root and on every slot:
+
+     data-readonly   the value cannot be changed
+     data-required   a value is required before submitting
+     data-complete   every slot is filled
+     data-filled     on Root: at least one character
+                     on a slot: that slot has a character
+
+   `data-filled` meaning two different things depending on where it sits is the
+   one thing to be careful of: a slot is filled when it holds a character, the
+   root when any slot does.
+   --------------------------------------------------------------------------- */
+
+.otp {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* --- Slot -------------------------------------------------------------------
+   A slot is .ui-input with its padding removed and its content centred. The
+   size follows the type step, so the slots grow with the rest of the system
+   rather than being pinned to 40px.
+   --------------------------------------------------------------------------- */
+
+.otp-input {
+  box-sizing: border-box;
+  width: calc(var(--step-text) * var(--step-lead) + var(--step-pad-y) * 2 + var(--hairline) * 2);
+  height: calc(var(--step-text) * var(--step-lead) + var(--step-pad-y) * 2 + var(--hairline) * 2);
+  padding: 0;
+  text-align: center;
+  font-size: calc(var(--step-text) * 1.15);
+  font-variant-numeric: tabular-nums;
+  /* A code is read character by character, so a little tracking helps. */
+  letter-spacing: 0.02em;
+}
+
+/* Coarse pointers get the 16px floor from .ui-input; keep the box square by
+   growing it to match rather than letting the text overflow. */
+@media (any-pointer: coarse) {
+  .otp-input {
+    width: calc(max(var(--step-text), 1rem) * var(--step-lead) + var(--step-pad-y) * 2 + var(--hairline) * 2);
+    height: calc(max(var(--step-text), 1rem) * var(--step-lead) + var(--step-pad-y) * 2 + var(--hairline) * 2);
+    font-size: calc(max(var(--step-text), 1rem) * 1.15);
+  }
+}
+
+/* A filled slot reads as settled; an empty one as waiting. */
+.otp-input[data-filled] {
+  border-color: var(--border-strong);
+  font-weight: 550;
+}
+
+.otp-input[data-invalid] {
+  border-color: var(--danger-border);
+}
+
+.otp-input[data-invalid]:focus-visible {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--danger) 22%, transparent);
+}
+
+.otp-input[data-readonly] {
+  background-color: var(--surface-sunken);
+}
+
+/* Once every slot is filled the whole row settles, which is the feedback that
+   the code is ready to submit. */
+.otp[data-complete] .otp-input {
+  border-color: var(--accent-border);
+}
+
+.otp[data-complete][data-invalid] .otp-input {
+  border-color: var(--danger-border);
+}
+
+/* --- Placeholder hints -------------------------------------------------------
+   A slot is a real input, so `placeholder` works. Hiding it on focus keeps the
+   hint out of the way of the caret.
+   --------------------------------------------------------------------------- */
+
+.otp-input::placeholder {
+  color: var(--text-subtle);
+  -webkit-text-fill-color: var(--text-subtle);
+  opacity: 1;
+}
+
+.otp-input:focus::placeholder {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- Separator --------------------------------------------------------------
+   Breaks a long code into readable chunks — 123-456 rather than 123456.
+   --------------------------------------------------------------------------- */
+
+.otp-separator {
+  width: 0.75rem;
+  height: var(--hairline);
+  background-color: var(--border-strong);
+  flex-shrink: 0;
+}
+
+/* --- Groups -----------------------------------------------------------------
+   Wrapping subsets of slots in a plain div is how chunking is done; the slots
+   stay direct children of nothing in particular as far as Base UI cares.
+   --------------------------------------------------------------------------- */
+
+.otp-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* --- Invalid feedback --------------------------------------------------------
+   A rejected character is not a validation error — nothing was committed — so
+   it gets a momentary shake rather than a message that lingers.
+   --------------------------------------------------------------------------- */
+
+.otp-input[data-rejected] {
+  animation: otp-reject 180ms var(--ease-out);
+}
+
+@keyframes otp-reject {
+  0%,
+  100% {
+    translate: 0;
+  }
+
+  25% {
+    translate: -3px;
+  }
+
+  75% {
+    translate: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .otp-input[data-rejected] {
+    animation: none;
+    border-color: var(--danger);
+  }
+}
+
+/* --- Readout ----------------------------------------------------------------- */
+
+.otp-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 0.75rem;
+  margin-block-start: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-subtle);
+}
+
+.otp-readout strong {
+  font-weight: 600;
+  color: var(--text-muted);
+}
