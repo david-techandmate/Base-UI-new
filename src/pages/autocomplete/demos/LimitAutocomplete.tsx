@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { TAGS, type Tag } from './data';
 
@@ -16,6 +17,7 @@ const LIMIT = 5;
  * children conditionally instead of the component itself.
  */
 export function LimitAutocomplete() {
+  const id = React.useId();
   const [value, setValue] = React.useState('');
   const { contains } = Autocomplete.useFilter({ sensitivity: 'base' });
 
@@ -33,10 +35,10 @@ export function LimitAutocomplete() {
       limit={LIMIT}
       openOnInputClick
     >
-      <label className="ui-field">
-        <span className="ui-label">At most {LIMIT} results</span>
-        <Autocomplete.Input className="ui-input ac-input" placeholder="e.g. component" />
-      </label>
+      <Field.Root className="fld">
+        <Field.Label className="fld-label" htmlFor={id}>At most {LIMIT} results</Field.Label>
+        <Autocomplete.Input id={id} className="ui-input ac-input" placeholder="e.g. component" />
+      </Field.Root>
 
       <Autocomplete.Portal>
         <Autocomplete.Positioner className="ac-positioner" sideOffset={6}>

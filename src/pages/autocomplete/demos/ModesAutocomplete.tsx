@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { TAGS, type Tag } from './data';
 
@@ -19,16 +20,16 @@ import { TAGS, type Tag } from './data';
  * or `inline` and it changes.
  */
 export function ModesAutocomplete({ mode }: { mode: 'list' | 'both' | 'inline' | 'none' }) {
+  const id = React.useId();
   const [value, setValue] = React.useState('');
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
       <Autocomplete.Root items={TAGS} mode={mode} value={value} onValueChange={setValue}>
-        <Autocomplete.Input
-          className="ui-input ac-input"
-          placeholder="e.g. co"
-          aria-label={`Search tags, mode ${mode}`}
-        />
+        <Field.Root className="fld">
+          <Field.Label className="ui-visually-hidden" htmlFor={id}>{`Search tags, mode ${mode}`}</Field.Label>
+          <Autocomplete.Input id={id} className="ui-input ac-input" placeholder="e.g. co" />
+        </Field.Root>
 
         <Autocomplete.Portal>
           <Autocomplete.Positioner className="ac-positioner" sideOffset={6}>

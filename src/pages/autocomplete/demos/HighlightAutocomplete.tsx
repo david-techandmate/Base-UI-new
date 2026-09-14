@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { TAGS, type Tag } from './data';
 
@@ -31,6 +33,7 @@ export function HighlightAutocomplete({
   highlightItemOnHover?: boolean;
   label: string;
 }) {
+  const id = React.useId();
   return (
     <Autocomplete.Root
       items={TAGS}
@@ -38,7 +41,10 @@ export function HighlightAutocomplete({
       keepHighlight={keepHighlight}
       highlightItemOnHover={highlightItemOnHover}
     >
-      <Autocomplete.Input className="ui-input ac-input" placeholder="e.g. co" aria-label={label} />
+      <Field.Root className="fld">
+        <Field.Label className="ui-visually-hidden" htmlFor={id}>{label}</Field.Label>
+        <Autocomplete.Input id={id} className="ui-input ac-input" placeholder="e.g. co" />
+      </Field.Root>
 
       <Autocomplete.Portal>
         <Autocomplete.Positioner className="ac-positioner" sideOffset={6}>

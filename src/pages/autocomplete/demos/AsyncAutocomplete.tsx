@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
 interface Repo {
@@ -24,6 +25,7 @@ interface Repo {
  * contents are still settling.
  */
 export function AsyncAutocomplete() {
+  const id = React.useId();
   const [query, setQuery] = React.useState('');
   const [results, setResults] = React.useState<Repo[]>([]);
   const [error, setError] = React.useState<string | null>(null);
@@ -80,10 +82,10 @@ export function AsyncAutocomplete() {
       itemToStringValue={(repo) => repo.name}
       filter={null}
     >
-      <label className="ui-field">
-        <span className="ui-label">Search repositories</span>
-        <Autocomplete.Input className="ui-input ac-input" placeholder="e.g. ui" />
-      </label>
+      <Field.Root className="fld">
+        <Field.Label className="fld-label" htmlFor={id}>Search repositories</Field.Label>
+        <Autocomplete.Input id={id} className="ui-input ac-input" placeholder="e.g. ui" />
+      </Field.Root>
 
       {/* Nothing to say and nothing to show: keep the popup out of the DOM
           rather than opening an empty box. */}
@@ -93,7 +95,7 @@ export function AsyncAutocomplete() {
             <Autocomplete.Status>
               {status && (
                 <div className="ac-status" data-placement="top">
-                  {pending && <span className="ac-spinner" aria-hidden />}
+                  {pending && <span className="ui-spinner" aria-hidden />}
                   {status}
                 </div>
               )}

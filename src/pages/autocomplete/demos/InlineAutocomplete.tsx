@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { SearchIcon } from '../../../showcase/icons';
 import { TAG_GROUPS, type Tag, type TagGroup } from './data';
@@ -18,17 +20,21 @@ import { TAG_GROUPS, type Tag, type TagGroup } from './data';
  * the list, which would otherwise leave Enter with nothing to act on.
  */
 export function InlineAutocomplete() {
+  const id = React.useId();
   return (
     <Autocomplete.Root inline open items={TAG_GROUPS} autoHighlight="always" keepHighlight>
       <div className="ac-inline">
-        <Autocomplete.InputGroup className="ac-input-group">
-          <SearchIcon className="ac-search-icon" />
-          <Autocomplete.Input
-            className="ui-input ac-input"
-            placeholder="Search tags and commands…"
-            aria-label="Search tags and commands"
-          />
-        </Autocomplete.InputGroup>
+        <Field.Root className="fld">
+          <Field.Label className="ui-visually-hidden" htmlFor={id}>Search tags and commands</Field.Label>
+          <Autocomplete.InputGroup className="ac-input-group">
+            <SearchIcon className="ac-search-icon" />
+            <Autocomplete.Input
+            id={id}
+              className="ui-input ac-input"
+              placeholder="Search tags and commands…"
+            />
+          </Autocomplete.InputGroup>
+        </Field.Root>
 
         <Autocomplete.Empty>
           <div className="ac-empty">No results.</div>

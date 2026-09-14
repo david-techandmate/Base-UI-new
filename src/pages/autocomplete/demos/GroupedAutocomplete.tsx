@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { TAG_GROUPS, type Tag, type TagGroup } from './data';
 
@@ -15,12 +17,13 @@ import { TAG_GROUPS, type Tag, type TagGroup } from './data';
  * a reader should not have to guess a query before the structure appears.
  */
 export function GroupedAutocomplete() {
+  const id = React.useId();
   return (
     <Autocomplete.Root items={TAG_GROUPS} openOnInputClick>
-      <label className="ui-field">
-        <span className="ui-label">Select a tag</span>
-        <Autocomplete.Input className="ui-input ac-input" placeholder="e.g. component" />
-      </label>
+      <Field.Root className="fld">
+        <Field.Label className="fld-label" htmlFor={id}>Select a tag</Field.Label>
+        <Autocomplete.Input id={id} className="ui-input ac-input" placeholder="e.g. component" />
+      </Field.Root>
 
       <Autocomplete.Portal>
         <Autocomplete.Positioner className="ac-positioner" sideOffset={6}>

@@ -363,29 +363,6 @@
   border-block-end: var(--hairline) solid var(--border);
 }
 
-.ac-spinner {
-  box-sizing: border-box;
-  flex-shrink: 0;
-  width: 0.75rem;
-  height: 0.75rem;
-  border: 1.5px solid currentcolor;
-  border-right-color: transparent;
-  border-radius: 999px;
-  animation: ac-spin 0.75s linear infinite;
-}
-
-@keyframes ac-spin {
-  to {
-    rotate: 360deg;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ac-spinner {
-    animation-duration: 2s;
-  }
-}
-
 /* --- Inline list ------------------------------------------------------------
    `inline` renders the list without the component's own popup, so the surface
    styling moves here. Used for a command-palette shape.
@@ -417,4 +394,23 @@
 
 .ac-inline .ac-list {
   max-height: 14rem;
+}
+
+/* --- Field wrapper -----------------------------------------------------------
+   Every input here is composed inside a Field.Root, which brings .fld's own
+   width and max-width. That is right for a field on a page and wrong inside a
+   popup or an inline panel, where the surface already sets the width — so the
+   wrapper gives it back.
+   --------------------------------------------------------------------------- */
+
+.ac-popup .fld,
+.ac-inline .fld {
+  max-width: none;
+}
+
+/* The label is visually hidden in these, so the field's own gap would leave a
+   stray space above the input. */
+.ac-popup .fld,
+.ac-inline .fld {
+  gap: 0;
 }

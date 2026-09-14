@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { EMOJI_GROUPS, type EmojiGroup } from './emoji';
 
@@ -18,6 +19,7 @@ const COLUMNS = 6;
  * doesn't dump its name into the search box on the way out.
  */
 export function GridAutocomplete() {
+  const id = React.useId();
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState('');
   const [picked, setPicked] = React.useState<string[]>([]);
@@ -44,13 +46,12 @@ export function GridAutocomplete() {
         <Autocomplete.Portal>
           <Autocomplete.Positioner className="ac-positioner" sideOffset={6} align="start">
             <Autocomplete.Popup className="ac-popup" style={{ width: '17rem' }}>
-              <Autocomplete.InputGroup className="ac-input-group">
-                <Autocomplete.Input
-                  className="ui-input ac-input"
-                  placeholder="Search emoji…"
-                  aria-label="Search emoji"
-                />
-              </Autocomplete.InputGroup>
+              <Field.Root className="fld">
+                <Field.Label className="ui-visually-hidden" htmlFor={id}>Search emoji</Field.Label>
+                <Autocomplete.InputGroup className="ac-input-group">
+                  <Autocomplete.Input id={id} className="ui-input ac-input" placeholder="Search emoji…" />
+                </Autocomplete.InputGroup>
+              </Field.Root>
 
               <Autocomplete.Empty>
                 <div className="ac-empty">No emoji match that name.</div>

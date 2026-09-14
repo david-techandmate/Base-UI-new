@@ -46,10 +46,10 @@ const TOC = [
 ];
 
 const ANATOMY = `<Autocomplete.Root items={tags}>
-  <label className="ui-field">
-    <span className="ui-label">Search tags</span>
-    <Autocomplete.Input className="ui-input ac-input" />
-  </label>
+  <Field.Root className="fld">
+    <Field.Label className="fld-label" htmlFor={id}>Search tags</Field.Label>
+    <Autocomplete.Input id={id} className="ui-input ac-input" />
+  </Field.Root>
 
   <Autocomplete.Portal>
     <Autocomplete.Positioner className="ac-positioner" sideOffset={6}>
@@ -74,7 +74,7 @@ export function AutocompletePage() {
     <>
       <PageHeader
         title="Autocomplete"
-        lede="An input that suggests options as you type. The input holds free text — suggestions only optionally complete it — so reach for Combobox instead when the value must be one of the options and the choice has to be remembered."
+        lede="An input that suggests options as you type. The input holds free text — suggestions only optionally complete it — so reach for Combobox instead when the value must be one of the options and the choice has to be remembered. Every example here is composed inside Field."
         docs="https://base-ui.com/react/components/autocomplete"
         toc={TOC}
       />
@@ -86,6 +86,23 @@ export function AutocompletePage() {
         description="Root renders no element. Portal moves the list out to the end of the body so nothing can clip it; Positioner measures the input and exposes those measurements as CSS variables; Popup is the surface; List is the scroll container and takes a function child."
         source={basicSource}
       >
+        <Callout>
+          Every input on this page is composed inside a <code>Field.Root</code>, which is where
+          the label association and the field state attributes come from — this page was written
+          before Field existed and has been reworked onto it. The build refuses to regress:{' '}
+          <code>npm run check:fields</code> fails if an <code>.ui-input</code> appears outside a{' '}
+          <code>Field.Root</code>.
+        </Callout>
+        <Callout>
+          One sharp edge in that composition.{' '}
+          <code>Autocomplete.Input</code> sets <code>aria-labelledby</code> back to the{' '}
+          <code>Field.Label</code>, so a screen reader names it correctly — but it never claims
+          the control id <code>Field.Root</code> generated, so the label&rsquo;s <code>for</code>{' '}
+          points at an element that does not exist and <strong>clicking the label focuses
+          nothing</strong>. Found by testing the click, not by reading the DOM. The fix is one
+          id in two places: <code>htmlFor</code> on the label and <code>id</code> on the input,
+          from a single <code>React.useId()</code>.
+        </Callout>
         <Callout>
           The <code>items</code> prop is what makes any of this work: Base UI filters that array
           against the input value and passes the survivors to <code>List</code>&rsquo;s function

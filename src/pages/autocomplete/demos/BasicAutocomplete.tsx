@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { TAGS, type Tag } from './data';
 
@@ -14,12 +16,16 @@ import { TAGS, type Tag } from './data';
  * `{ id, value }`, and Base UI reads `value` without being told to.
  */
 export function BasicAutocomplete() {
+  const id = React.useId();
+
   return (
     <Autocomplete.Root items={TAGS}>
-      <label className="ui-field">
-        <span className="ui-label">Search tags</span>
-        <Autocomplete.Input className="ui-input ac-input" placeholder="e.g. feature" />
-      </label>
+      <Field.Root className="fld">
+        <Field.Label className="fld-label" htmlFor={id}>
+          Search tags
+        </Field.Label>
+        <Autocomplete.Input id={id} className="ui-input ac-input" placeholder="e.g. feature" />
+      </Field.Root>
 
       <Autocomplete.Portal>
         <Autocomplete.Positioner className="ac-positioner" sideOffset={6}>

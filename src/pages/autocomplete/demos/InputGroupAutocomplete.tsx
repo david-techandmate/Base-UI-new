@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { CrossIcon, SearchIcon } from '../../../showcase/icons';
 import { TAGS, type Tag } from './data';
@@ -17,19 +19,26 @@ import { TAGS, type Tag } from './data';
  * is noise.
  */
 export function InputGroupAutocomplete({ openOnClick = false }: { openOnClick?: boolean }) {
+  const id = React.useId();
   return (
     <Autocomplete.Root items={TAGS} openOnInputClick={openOnClick}>
-      <Autocomplete.InputGroup className="ac-input-group">
-        <SearchIcon className="ac-search-icon" />
-        <Autocomplete.Input
-          className="ui-input ac-input"
-          placeholder={openOnClick ? 'Click to open' : 'Type to open'}
-          aria-label="Search tags"
-        />
-        <Autocomplete.Clear className="ac-clear" aria-label="Clear search">
-          <CrossIcon width={12} height={12} />
-        </Autocomplete.Clear>
-      </Autocomplete.InputGroup>
+      {/* Field.Root wraps the group, not just the input: the group is the
+          control as far as the user is concerned, so the label association and
+          the field state attributes belong on the whole thing. */}
+      <Field.Root className="fld">
+        <Field.Label className="ui-visually-hidden" htmlFor={id}>Search tags</Field.Label>
+        <Autocomplete.InputGroup className="ac-input-group">
+          <SearchIcon className="ac-search-icon" />
+          <Autocomplete.Input
+            id={id}
+            className="ui-input ac-input"
+            placeholder={openOnClick ? 'Click to open' : 'Type to open'}
+          />
+          <Autocomplete.Clear className="ac-clear" aria-label="Clear search">
+            <CrossIcon width={12} height={12} />
+          </Autocomplete.Clear>
+        </Autocomplete.InputGroup>
+      </Field.Root>
 
       <Autocomplete.Portal>
         <Autocomplete.Positioner className="ac-positioner" sideOffset={6}>

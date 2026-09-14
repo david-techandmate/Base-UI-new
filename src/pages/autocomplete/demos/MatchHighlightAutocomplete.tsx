@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Field } from '@base-ui/react/field';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { DOCS, type DocEntry } from './data';
 
@@ -11,12 +12,13 @@ import { DOCS, type DocEntry } from './data';
  * match found in the summary is visible rather than looking like a stray result.
  */
 export function MatchHighlightAutocomplete() {
+  const id = React.useId();
   return (
     <Autocomplete.Root items={DOCS} itemToStringValue={(doc) => doc.title}>
-      <label className="ui-field">
-        <span className="ui-label">Search the handbook</span>
-        <Autocomplete.Input className="ui-input ac-input" placeholder="e.g. style" />
-      </label>
+      <Field.Root className="fld">
+        <Field.Label className="fld-label" htmlFor={id}>Search the handbook</Field.Label>
+        <Autocomplete.Input id={id} className="ui-input ac-input" placeholder="e.g. style" />
+      </Field.Root>
 
       <Autocomplete.Portal>
         <Autocomplete.Positioner className="ac-positioner" sideOffset={6}>
