@@ -72,9 +72,9 @@ export const GROUPS: ComponentGroup[] = [
     label: 'Inputs',
     items: [
       entry('input', 'Input', 'A text input.'),
-      entry('number-field', 'Number Field', 'Increment, decrement, and a scrub area.'),
-      entry('otp-field', 'OTP Field', 'One-time password and verification code entry.'),
-      entry('field', 'Field', 'Labelling and validation for form controls.'),
+      entry('number-field', 'Number Field', 'Increment, decrement, and a scrub area.', 'ready'),
+      entry('otp-field', 'OTP Field', 'One-time password and verification code entry.', 'ready'),
+      entry('field', 'Field', 'Labelling and validation for form controls.', 'ready'),
       entry('fieldset', 'Fieldset', 'A group of controls with a legend.'),
       entry('form', 'Form', 'Consolidated error handling for a form.'),
     ],

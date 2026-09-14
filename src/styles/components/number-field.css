@@ -1,0 +1,215 @@
+/* ---------------------------------------------------------------------------
+   Number Field
+
+   Structure:  Field.Root                    (labelling and validation)
+                 > Field.Label
+                     > NumberField.ScrubArea (optional — drag the label to scrub)
+                         > NumberField.ScrubAreaCursor
+                 > NumberField.Root          (renders a <div>)
+                     > .nf-group             (Group: one control, three parts)
+                         > .nf-step          (Decrement)
+                         > .nf-input         (Input)
+                         > .nf-step          (Increment)
+
+   Number Field carries every Field state attribute — data-valid, data-invalid,
+   data-dirty, data-touched, data-filled, data-focused, data-disabled — on Root,
+   Group, Input, both steppers and the scrub area, plus two of its own:
+
+     data-readonly    the value cannot be changed
+     data-required    a value is required before submitting
+     data-scrubbing   present on every part while a scrub is in progress
+
+   The steppers get data-disabled at the ends of the range as well as when the
+   whole field is disabled, so a button at the limit dims without any React
+   state tracking it.
+   --------------------------------------------------------------------------- */
+
+/* --- Group ------------------------------------------------------------------
+   The three parts read as one control: the group owns the border and the focus
+   ring, and the children give up their own edges. Borders are collapsed with a
+   negative margin rather than by removing them, so the divider between a
+   stepper and the input stays exactly one hairline at every size and theme.
+   --------------------------------------------------------------------------- */
+
+.nf-group {
+  display: flex;
+  align-items: stretch;
+  width: fit-content;
+  max-width: 100%;
+  border: var(--hairline) solid var(--border);
+  border-radius: var(--step-radius);
+  background-color: var(--surface);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.nf-group:focus-within {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 22%, transparent);
+}
+
+.nf-group[data-invalid] {
+  border-color: var(--danger-border);
+}
+
+.nf-group[data-invalid]:focus-within {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--danger) 22%, transparent);
+}
+
+.nf-group[data-disabled] {
+  background-color: var(--surface-sunken);
+}
+
+/* --- Input ------------------------------------------------------------------
+   Inherits .ui-input, then gives up its own box to the group.
+
+   Tabular figures matter here more than anywhere else: without them the field
+   changes width as digits change, so holding the increment button makes the
+   whole control jitter.
+   --------------------------------------------------------------------------- */
+
+.nf-input {
+  width: 6ch;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.nf-input:focus-visible {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Formatted values are longer than bare digits — "£1,250.00" needs more room
+   than "1250", and `ch` is the width of a zero, so grouping separators and
+   currency symbols push past a naive character count. */
+.nf-input[data-width='wide'] {
+  width: 12ch;
+  text-align: end;
+  padding-inline-end: 0.625rem;
+}
+
+/* --- Steppers ---------------------------------------------------------------
+   A stepper is not .ui-action: it has no radius of its own, sits flush against
+   the input, and dims at the end of the range rather than on a tone prop.
+   --------------------------------------------------------------------------- */
+
+.nf-step {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: calc(var(--step-text) * var(--step-lead) + var(--step-pad-y) * 2);
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  cursor: default;
+  user-select: none;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.nf-step:first-child {
+  border-start-start-radius: inherit;
+  border-end-start-radius: inherit;
+}
+
+.nf-step:last-child {
+  border-start-end-radius: inherit;
+  border-end-end-radius: inherit;
+}
+
+/* One hairline between each stepper and the input, drawn by the stepper so it
+   does not double up with the group border. */
+.nf-step:first-child {
+  border-inline-end: var(--hairline) solid var(--border);
+}
+
+.nf-step:last-child {
+  border-inline-start: var(--hairline) solid var(--border);
+}
+
+@media (hover: hover) {
+  .nf-step:hover:not([data-disabled]) {
+    background-color: var(--surface-hover);
+    color: var(--text);
+  }
+}
+
+.nf-step:active:not([data-disabled]) {
+  background-color: var(--surface-active);
+}
+
+/* Present at the ends of the range as well as when the field is disabled. */
+.nf-step[data-disabled] {
+  color: var(--text-subtle);
+  cursor: not-allowed;
+}
+
+.nf-step .ui-icon {
+  width: var(--step-icon);
+  height: var(--step-icon);
+}
+
+/* --- Scrub area -------------------------------------------------------------
+   Dragging the label sideways changes the value. The cursor changes to signal
+   it, and Base UI marks every part data-scrubbing while a drag is live.
+   --------------------------------------------------------------------------- */
+
+.nf-scrub {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  cursor: ew-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+.nf-scrub[data-direction='vertical'] {
+  cursor: ns-resize;
+}
+
+.nf-scrub[data-disabled] {
+  cursor: default;
+}
+
+/* A hint that the label is draggable, without shouting about it. */
+.nf-scrub-hint {
+  color: var(--text-subtle);
+  font-weight: 400;
+  font-size: var(--step-text-sm);
+}
+
+/* ScrubAreaCursor renders the custom cursor while the pointer is locked. It is
+   drawn over everything, so it needs to stay legible on any background. */
+.nf-cursor {
+  filter: drop-shadow(0 1px 2px oklch(0% 0 0deg / 45%));
+}
+
+/* --- Readout ----------------------------------------------------------------
+   Showroom scaffolding: prints the change reason Base UI reported, so the
+   difference between typing, stepping, scrubbing and wheeling is observable.
+   --------------------------------------------------------------------------- */
+
+.nf-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 0.75rem;
+  margin-block-start: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-subtle);
+}
+
+.nf-readout strong {
+  font-weight: 600;
+  color: var(--text-muted);
+}

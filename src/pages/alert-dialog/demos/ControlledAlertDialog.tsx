@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { AlertDialog } from '@base-ui/react/alert-dialog';
+import { Field } from '@base-ui/react/field';
 
 /**
  * Controlled: `open` is state you own, `onOpenChange` is the request to change
@@ -69,19 +70,23 @@ export function ControlledAlertDialog() {
               </AlertDialog.Description>
             </div>
 
-            <label className="adlg-body" style={{ display: 'flex', gap: '0.5rem' }}>
-              <input
-                type="checkbox"
-                checked={understood}
-                onChange={(event) => {
-                  setUnderstood(event.target.checked);
-                  if (event.target.checked) {
-                    setLastBlocked(null);
-                  }
-                }}
-              />
-              I have updated every client that uses this key.
-            </label>
+            {/* Field.Root owns the label association and the state attributes, so
+                the acknowledgement is composed rather than hand-wired. */}
+            <Field.Root className="fld adlg-ack">
+              <Field.Label className="fld-label">
+                <Field.Control
+                  render={<input type="checkbox" />}
+                  checked={understood}
+                  onChange={(event) => {
+                    setUnderstood(event.target.checked);
+                    if (event.target.checked) {
+                      setLastBlocked(null);
+                    }
+                  }}
+                />
+                I have updated every client that uses this key.
+              </Field.Label>
+            </Field.Root>
 
             {lastBlocked && (
               <p className="state-readout">blocked a close with reason &quot;{lastBlocked}&quot;</p>

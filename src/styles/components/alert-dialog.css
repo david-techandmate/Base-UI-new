@@ -215,3 +215,13 @@
   font-size: var(--step-text);
   color: var(--text-muted);
 }
+
+/* The acknowledgement checkbox in the controlled example is a Field, so it
+   inherits the field state attributes rather than hand-wiring a label. */
+.adlg-ack .fld-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 450;
+  color: var(--text-muted);
+}
