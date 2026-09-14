@@ -426,23 +426,17 @@
   tab-size: 2;
 }
 
-/* --- Theme matrix (side-by-side themes within one section) ---------------- */
+/* --- Live token readout --------------------------------------------------- */
 
-.theme-pane {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+.readout {
+  margin-block-start: 1rem;
   border: var(--hairline) solid var(--border);
   border-radius: var(--radius-md);
+  background-color: var(--surface);
   overflow: hidden;
-  background-color: var(--bg);
-  color: var(--text);
 }
 
-.theme-pane-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.readout-bar {
   padding: 0.4375rem 0.75rem;
   border-block-end: var(--hairline) solid var(--border);
   background-color: var(--surface-sunken);
@@ -451,21 +445,72 @@
   color: var(--text-muted);
 }
 
-.theme-pane-stage {
-  padding: 1.5rem 1.25rem;
+.readout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: 0;
+  margin: 0;
+}
+
+/* No per-row divider: the column count reflows with width, so a trailing row
+   with fewer cells leaves a divider hanging under part of the grid. */
+.readout-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.375rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.readout-grid {
+  padding-block: 0.3125rem;
+}
+
+.readout-row dt {
+  color: var(--text-subtle);
+}
+
+.readout-row dd {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+  margin: 0;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  text-align: end;
+}
+
+.readout-swatch {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 3px;
+  border: var(--hairline) solid var(--border-strong);
+  flex-shrink: 0;
 }
 
 /* --- Misc ----------------------------------------------------------------- */
 
+/* Block, not flex: callouts carry running prose with inline <code>, and flex
+   would promote every text node and element to a separate column. */
 .callout {
-  display: flex;
-  gap: 0.625rem;
+  display: block;
   padding: 0.75rem 0.875rem;
   border: var(--hairline) solid var(--accent-border);
   border-radius: var(--radius-md);
   background-color: var(--accent-soft);
   color: var(--accent-text);
   font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+code {
+  padding: 0.0625rem 0.3125rem;
+  border-radius: var(--radius-sm);
+  background-color: color-mix(in oklch, var(--text) 8%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
 }
 
 .state-readout {

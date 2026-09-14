@@ -25,12 +25,12 @@ export function Indicators({
         <Accordion.Item className="acc-item" key={faq.value} value={faq.value}>
           <Accordion.Header className="acc-header">
             <Accordion.Trigger className="acc-trigger" data-indicator-side={side}>
-              {side === 'start' && <Icon className="acc-icon" data-indicator={indicator} />}
+              {side === 'start' && <Icon className="ui-icon" data-indicator={indicator} />}
               {faq.question}
-              {side === 'end' && <Icon className="acc-icon" data-indicator={indicator} />}
+              {side === 'end' && <Icon className="ui-icon" data-indicator={indicator} />}
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel className="acc-panel">
+          <Accordion.Panel className="ui-panel acc-panel">
             <div className="acc-content">{faq.answer}</div>
           </Accordion.Panel>
         </Accordion.Item>

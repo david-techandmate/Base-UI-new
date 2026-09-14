@@ -25,10 +25,10 @@ export function StatesAccordion({
           <Accordion.Header className="acc-header">
             <Accordion.Trigger className="acc-trigger">
               {faq.question}
-              <PlusIcon className="acc-icon" data-indicator="plus" />
+              <PlusIcon className="ui-icon" data-indicator="plus" />
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel className="acc-panel">
+          <Accordion.Panel className="ui-panel acc-panel">
             <div className="acc-content">{faq.answer}</div>
           </Accordion.Panel>
         </Accordion.Item>

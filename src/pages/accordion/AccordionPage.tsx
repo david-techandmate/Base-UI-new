@@ -1,4 +1,4 @@
-import { Callout, Demo, DemoGrid, PageHeader, Section, SizeMatrix, ThemeMatrix } from '../../showcase/ui';
+import { Callout, Demo, DemoGrid, PageHeader, Section, TokenReadout } from '../../showcase/ui';
 import { BasicAccordion } from './demos/BasicAccordion';
 import { OpenBehaviour } from './demos/OpenBehaviour';
 import { Indicators } from './demos/Indicators';
@@ -23,8 +23,7 @@ const VARIANTS = ['solid', 'outline', 'soft', 'elevated', 'minimal'] as const;
 
 const TOC = [
   { id: 'variants', title: 'Variants' },
-  { id: 'sizes', title: 'Size scale' },
-  { id: 'themes', title: 'Themes' },
+  { id: 'tokens', title: 'Size and theme' },
   { id: 'open-behaviour', title: 'Open behaviour' },
   { id: 'indicators', title: 'Indicators' },
   { id: 'states', title: 'States' },
@@ -40,10 +39,10 @@ function variantSnippet(variant: string) {
     <Accordion.Header className="acc-header">
       <Accordion.Trigger className="acc-trigger">
         Question
-        <PlusIcon className="acc-icon" data-indicator="plus" />
+        <PlusIcon className="ui-icon" data-indicator="plus" />
       </Accordion.Trigger>
     </Accordion.Header>
-    <Accordion.Panel className="acc-panel">
+    <Accordion.Panel className="ui-panel acc-panel">
       <div className="acc-content">Answer</div>
     </Accordion.Panel>
   </Accordion.Item>
@@ -82,26 +81,25 @@ export function AccordionPage() {
       </Section>
 
       <Section
-        id="sizes"
+        id="tokens"
         index={2}
-        title="Size scale"
-        description="Padding, type scale, icon size, and corner radius all read from --step-* tokens, so a single data-size attribute rescales the component. Each pane below sets its own scale independently of the toolbar."
+        title="Size and theme"
+        description="One component, retokenised live. Use the size and theme switches in the header — nothing below is pinned, so the whole page moves with them. The readout shows what the cascade actually resolved on <html>, so a token that fails to apply is visible rather than assumed."
       >
-        <SizeMatrix>{() => <BasicAccordion variant="solid" />}</SizeMatrix>
-      </Section>
-
-      <Section
-        id="themes"
-        index={3}
-        title="Themes side by side"
-        description="Theme tokens are declared on [data-theme] selectors rather than :root alone, so any subtree can render in a different theme. Useful for reviewing contrast without flipping the whole page."
-      >
-        <ThemeMatrix>{() => <BasicAccordion variant="solid" />}</ThemeMatrix>
+        <DemoGrid columns={2}>
+          <Demo label="follows the header" align="stretch">
+            <BasicAccordion variant="solid" />
+          </Demo>
+          <Demo label="follows the header" align="stretch">
+            <BasicAccordion variant="outline" />
+          </Demo>
+        </DemoGrid>
+        <TokenReadout />
       </Section>
 
       <Section
         id="open-behaviour"
-        index={4}
+        index={3}
         title="Open behaviour"
         description="By default one panel is open at a time. multiple allows several, and defaultValue seeds the uncontrolled open state with an array of item values."
         source={openSource}
@@ -121,7 +119,7 @@ export function AccordionPage() {
 
       <Section
         id="indicators"
-        index={5}
+        index={4}
         title="Trigger indicators"
         description="The trigger renders a plain button, so indicators are ordinary markup. Rotation is keyed off Base UI's [data-panel-open] attribute rather than React state."
         source={indicatorSource}
@@ -148,7 +146,7 @@ export function AccordionPage() {
 
       <Section
         id="states"
-        index={6}
+        index={5}
         title="Disabled states"
         description="disabled on the root disables every trigger; on a single item it disables just that one. Both expose [data-disabled] for styling."
         source={statesSource}
@@ -169,7 +167,7 @@ export function AccordionPage() {
 
       <Section
         id="controlled"
-        index={7}
+        index={6}
         title="Controlled and cancelable"
         description="onValueChange receives the new value and an eventDetails object. Read eventDetails.reason to run side effects conditionally, or call eventDetails.cancel() to refuse a change while keeping the component uncontrolled."
         source={`${controlledSource}\n\n/* ------------------------------------------------------------------ */\n\n${cancelSource}`}
@@ -190,7 +188,7 @@ export function AccordionPage() {
 
       <Section
         id="rich"
-        index={8}
+        index={7}
         title="Rich panel content"
         description="Triggers can carry two-line labels, avatars, and badges; panels can hold any layout. This composition keeps multiple open at once so records can be compared."
         source={richSource}
@@ -204,7 +202,7 @@ export function AccordionPage() {
 
       <Section
         id="nested"
-        index={9}
+        index={8}
         title="Nested accordions"
         description="Each Root owns its own value, so accordions nest with no extra wiring. Both levels animate height, so the outer panel resizes as the inner one opens."
         source={nestedSource}
@@ -218,7 +216,7 @@ export function AccordionPage() {
 
       <Section
         id="find-in-page"
-        index={10}
+        index={9}
         title="Find in page"
         description={`hiddenUntilFound keeps closed panels mounted with hidden="until-found", so browser search and search engines reach their contents.`}
         source={hiddenSource}

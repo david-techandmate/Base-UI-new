@@ -1,0 +1,18 @@
+/* ---------------------------------------------------------------------------
+   The design system.
+
+   This is the only stylesheet an app needs to import:
+
+     import '@/styles/index.css';
+
+   It carries the reset, the theme and size tokens, shared primitives, and
+   every component stylesheet. Nothing in here knows about the showroom — that
+   chrome lives in src/showcase/showroom.css and can be deleted outright when
+   using this repo as a starting point.
+   --------------------------------------------------------------------------- */
+
+@import './base/reset.css';
+@import './base/tokens.css';
+@import './base/primitives.css';
+
+@import './components/accordion.css';

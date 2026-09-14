@@ -23,10 +23,10 @@ export function AlwaysOpenAccordion() {
           <Accordion.Header className="acc-header">
             <Accordion.Trigger className="acc-trigger">
               {faq.question}
-              <CaretIcon className="acc-icon" data-indicator="caret" />
+              <CaretIcon className="ui-icon" data-indicator="caret" />
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel className="acc-panel">
+          <Accordion.Panel className="ui-panel acc-panel">
             <div className="acc-content">{faq.answer}</div>
           </Accordion.Panel>
         </Accordion.Item>

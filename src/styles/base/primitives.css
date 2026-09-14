@@ -1,0 +1,167 @@
+/* ---------------------------------------------------------------------------
+   Primitives shared by more than one component.
+
+   Anything in here is deliberately component-agnostic: if two components would
+   otherwise carry the same rule, it belongs here instead. Component
+   stylesheets stay responsible for whatever is genuinely their own.
+   --------------------------------------------------------------------------- */
+
+/* --- Collapsing panel -----------------------------------------------------
+   Base UI measures a panel and exposes its natural height as a CSS variable
+   whose name is component-specific (--accordion-panel-height for Accordion,
+   and a matching name for every other collapsing component). The animation is
+   the same in each case, so it lives here and the component supplies only the
+   height.
+
+     <Accordion.Panel className="ui-panel acc-panel" />
+   --------------------------------------------------------------------------- */
+
+.ui-panel {
+  overflow: hidden;
+  transition: height var(--dur-med) var(--ease-out);
+}
+
+.ui-panel[data-starting-style],
+.ui-panel[data-ending-style] {
+  height: 0;
+}
+
+/* --- Trigger indicators ---------------------------------------------------
+   Rotation is keyed off Base UI state attributes, never React state. The
+   attribute that marks "open" differs per component, so each is listed.
+   --------------------------------------------------------------------------- */
+
+.ui-icon {
+  flex-shrink: 0;
+  width: var(--step-icon);
+  height: var(--step-icon);
+  color: var(--text-subtle);
+  transition:
+    rotate var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+[data-panel-open] .ui-icon,
+[data-open] > * > .ui-icon {
+  color: var(--accent-text);
+}
+
+/* A plus that becomes an x. */
+[data-panel-open] .ui-icon[data-indicator='plus'] {
+  rotate: 45deg;
+}
+
+/* A caret that flips to point up. */
+[data-panel-open] .ui-icon[data-indicator='caret'] {
+  rotate: 180deg;
+}
+
+/* A chevron resting sideways that rotates down when open. */
+.ui-icon[data-indicator='chevron'] {
+  rotate: -90deg;
+}
+
+[data-panel-open] .ui-icon[data-indicator='chevron'] {
+  rotate: 0deg;
+}
+
+/* --- Small action button --------------------------------------------------- */
+
+.ui-action {
+  padding: 0.3125rem 0.6875rem;
+  border: var(--hairline) solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface);
+  font: inherit;
+  font-size: var(--step-text-sm);
+  color: var(--text);
+  cursor: default;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.ui-action[data-tone='accent'] {
+  border-color: transparent;
+  background-color: var(--accent);
+  color: var(--accent-on);
+}
+
+@media (hover: hover) {
+  .ui-action:hover {
+    border-color: var(--border-strong);
+  }
+
+  .ui-action[data-tone='accent']:hover {
+    background-color: var(--accent-hover);
+    border-color: transparent;
+  }
+}
+
+.ui-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-start: 0.875rem;
+}
+
+/* --- Badge ----------------------------------------------------------------- */
+
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.0625rem 0.4375rem;
+  border-radius: 999px;
+  background-color: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-badge[data-tone='neutral'] {
+  background-color: var(--surface-active);
+  color: var(--text-muted);
+}
+
+/* --- Avatar ---------------------------------------------------------------- */
+
+.ui-avatar {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background-color: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 0.6875rem;
+  font-weight: 650;
+  flex-shrink: 0;
+}
+
+/* --- Definition list ------------------------------------------------------- */
+
+.ui-kv {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: 0.375rem 1rem;
+  font-size: var(--step-text-sm);
+}
+
+.ui-kv dt {
+  color: var(--text-subtle);
+}
+
+.ui-kv dd {
+  margin: 0;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Bulleted list --------------------------------------------------------- */
+
+.ui-list {
+  margin: 0;
+  padding-inline-start: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}

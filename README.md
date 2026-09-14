@@ -1,8 +1,10 @@
 # Base UI Showroom
 
-A visual design-system reference. Every [Base UI](https://base-ui.com) component gets a page
-showing the same component under our own CSS across themes, size scales, and structural
-variations — so we can pick and prototype patterns quickly.
+A public reference **and** a starting point.
+
+Every [Base UI](https://base-ui.com) component, styled with plain CSS, shown across themes, size
+scales, and structural variations — so you can see what's possible before you build. Then copy the
+repo and start your app with the tokens, themes, and Base UI wiring already done correctly.
 
 ```bash
 npm install
@@ -10,54 +12,131 @@ npm run dev      # http://localhost:5173
 npm run build    # typecheck + production build
 ```
 
-## How it is put together
+## Using this as a starting point
 
-| Path | Purpose |
+The repo is deliberately split into two halves:
+
+| Keep | Delete |
 | --- | --- |
-| `src/registry.ts` | The component catalogue. Drives the sidebar and routing. |
-| `src/styles/tokens.css` | Theme and size tokens. |
-| `src/styles/components/` | One stylesheet per component. |
-| `src/showcase/` | App shell (sidebar, toolbar) and page primitives. |
-| `src/pages/<slug>/` | A component's showcase page and its demos. |
+| `src/styles/` — the design system | `src/showcase/` — showroom chrome |
+| | `src/pages/` — the showcase pages |
+| | `src/registry.ts` — the component catalogue |
 
-### Themes and sizes
+Everything the design system needs is behind a single import:
 
-Tokens are declared on `[data-theme]` and `[data-size]` selectors rather than `:root` alone, so
-any subtree can opt into a different theme or scale:
+```ts
+import './styles/index.css';
+```
+
+That pulls in the reset, the theme and size tokens, the shared primitives, and every component
+stylesheet. Nothing in `src/styles/` knows the showroom exists, so deleting the other half leaves
+you with a working design system and no dangling references.
+
+The component demos under `src/pages/*/demos/` are written to be copy-pasted — plain Base UI
+markup with class names, no wrapper abstractions in the way.
+
+## Themes and sizes
+
+Tokens are declared on `[data-theme]` and `[data-size]` selectors rather than `:root` alone, so any
+subtree can opt into a different theme or scale:
 
 ```html
 <div data-theme="dark" data-size="sm">…</div>
 ```
 
-That is what lets a single section show all three themes, or all three size scales, side by side
-while the toolbar controls the rest of the page.
+Set them on `<html>` and the whole app retokenises — that is what the switches in the showroom
+header do. Scope them to a subtree only when you deliberately want an island on a different theme.
 
-Themes: `light`, `dark`, `contrast`. Sizes: `sm`, `md`, `lg`. The toolbar selection persists in
-`localStorage`.
+**Order matters.** `[data-theme='x']` and `:root` have identical specificity, so on `<html>`
+whichever is declared last wins. Every theme block must come after the `:root` defaults, or a theme
+that overrides a default is silently dropped when set on `<html>`.
 
-### Styling convention
+- **Themes:** `light`, `dark`, `contrast`
+- **Sizes:** `sm`, `md`, `lg`
 
-Components are styled with plain global CSS classes and driven by data attributes, so the markup
-in a demo is copy-pasteable as-is:
+To rebrand, edit `src/styles/base/tokens.css` — it is the only file holding colour, radius, shadow,
+and type-scale values. Components reference tokens exclusively and never hard-code a colour.
+
+## Styling convention
+
+Global CSS classes driven by data attributes, so demo markup is copy-pasteable as-is:
 
 ```jsx
 <Accordion.Root className="acc" data-variant="outline">
+  <Accordion.Item className="acc-item" value="item-1">
+    <Accordion.Header className="acc-header">
+      <Accordion.Trigger className="acc-trigger">
+        Question
+        <PlusIcon className="ui-icon" data-indicator="plus" />
+      </Accordion.Trigger>
+    </Accordion.Header>
+    <Accordion.Panel className="ui-panel acc-panel">
+      <div className="acc-content">Answer</div>
+    </Accordion.Panel>
+  </Accordion.Item>
+</Accordion.Root>
 ```
 
-Variant and size are attributes on the root (`data-variant`, `data-size`); interactive state comes
-from Base UI's own attributes (`[data-panel-open]`, `[data-open]`, `[data-disabled]`,
-`[data-starting-style]`, `[data-ending-style]`).
+- **Variant and size** are attributes on the root: `data-variant`, `data-size`.
+- **Interactive state** comes from Base UI's own attributes — `[data-panel-open]`, `[data-open]`,
+  `[data-disabled]`, `[data-starting-style]`, `[data-ending-style]`. No React state drives styling.
+- **`ui-` prefixed classes** are shared primitives from `base/primitives.css`; component-prefixed
+  classes (`acc-`, and so on) are specific to that component.
+
+Anything two components would both need belongs in `base/primitives.css` rather than being
+duplicated — the panel height transition, indicator rotation, action buttons, badges, avatars.
+Only Accordion is built so far, so that layer currently has a single consumer; it exists so the
+second component reuses rather than copies.
+
+## Layout
+
+| Path | Purpose |
+| --- | --- |
+| `src/styles/index.css` | Single entry point for the design system |
+| `src/styles/base/reset.css` | Reset and document defaults |
+| `src/styles/base/tokens.css` | Theme and size tokens — edit this to rebrand |
+| `src/styles/base/primitives.css` | Rules shared by more than one component |
+| `src/styles/components/` | One stylesheet per component |
+| `src/showcase/` | Showroom shell and page primitives |
+| `src/pages/<slug>/` | A component's showcase page and demos |
+| `src/registry.ts` | Component catalogue driving sidebar and routes |
 
 ## Adding a component page
 
 1. Create `src/pages/<slug>/<Name>Page.tsx` plus a `demos/` folder — one file per demo, so the
    section's "Demo source" block can import it with `?raw` and show real code.
-2. Add `src/styles/components/<slug>.css` and import it in `src/main.tsx`.
+2. Add `src/styles/components/<slug>.css` and `@import` it from `src/styles/index.css`.
 3. Register the page in `src/pages/index.ts`.
 4. Flip the entry's `status` to `'ready'` in `src/registry.ts`.
 
-Pages are built from the primitives in `src/showcase/ui.tsx`: `PageHeader`, `Section`, `DemoGrid`,
-`Demo`, `SizeMatrix`, `ThemeMatrix`, `SourceBlock`, `Callout`.
+Pages are assembled from the primitives in `src/showcase/ui.tsx`: `PageHeader`, `Section`,
+`DemoGrid`, `Demo`, `TokenReadout`, `SourceBlock`, `Callout`.
 
-Sections run from simple to complex down the page — plain variants first, then alternative
-functional setups, then full compositions.
+Sections run simple to complex down the page — plain variants first, then alternative functional
+setups, then full compositions.
+
+## Deployment
+
+Deployed on Vercel from `main`. Every push to `main` publishes to production; every pull request
+gets its own preview URL.
+
+`vercel.json` carries two things:
+
+- **A SPA rewrite.** Routes like `/c/accordion` are React Router paths, not files. Without the
+  rewrite, opening or refreshing one returns 404. Static files are matched before rewrites, so this
+  only catches unmatched paths.
+- **Immutable caching for `/assets/*`.** Vite emits content-hashed filenames, so those are safe to
+  cache forever.
+
+Build settings are auto-detected (`npm run build` → `dist`).
+
+## Checking the API
+
+Base UI ships TypeScript definitions, and they are the authoritative source when the docs are
+ambiguous:
+
+```bash
+cat node_modules/@base-ui/react/<component>/root/*Root.d.ts
+cat node_modules/@base-ui/react/<component>/*/[A-Z]*CssVars.d.ts
+cat node_modules/@base-ui/react/<component>/*/[A-Z]*DataAttributes.d.ts
+```
